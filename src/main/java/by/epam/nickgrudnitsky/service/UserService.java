@@ -1,13 +1,14 @@
 package by.epam.nickgrudnitsky.service;
 
 import by.epam.nickgrudnitsky.entity.User;
+import by.epam.nickgrudnitsky.exception.RoleRepositoryException;
 import by.epam.nickgrudnitsky.exception.UserRepositoryException;
 
 import java.sql.SQLException;
 import java.util.List;
 
 public interface UserService {
-    User register(User user) throws SQLException;
+    User register(User user) throws SQLException, RoleRepositoryException;
 
     List<User> getAll() throws SQLException, UserRepositoryException;
 

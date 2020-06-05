@@ -5,8 +5,10 @@ import by.epam.nickgrudnitsky.data.UserRepository;
 import by.epam.nickgrudnitsky.entity.Role;
 import by.epam.nickgrudnitsky.entity.Status;
 import by.epam.nickgrudnitsky.entity.User;
+import by.epam.nickgrudnitsky.exception.RoleRepositoryException;
 import by.epam.nickgrudnitsky.exception.UserRepositoryException;
 import by.epam.nickgrudnitsky.service.UserService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,8 +28,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User register(User user) throws SQLException {
-        if (user == null) return null;
+    public User register(User user) throws SQLException, RoleRepositoryException {
+        if (user == null)
+            return null;
 
         Role roleUser = roleRepository.findByName("USER");
         List<Role> userRoles = new ArrayList<>();
@@ -81,7 +84,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void delete(Integer id) throws SQLException, UserRepositoryException {
         User user = userRepository.findById(id);
-        if (user == null){
+        if (user == null) {
             log.warn("IN delete - no user found by id: {}", id);
             return;
         }

@@ -4,6 +4,8 @@ import by.epam.nickgrudnitsky.JdbcConnection;
 import by.epam.nickgrudnitsky.data.RoleRepository;
 import by.epam.nickgrudnitsky.entity.Role;
 import by.epam.nickgrudnitsky.entity.Status;
+import by.epam.nickgrudnitsky.exception.RoleRepositoryException;
+
 import org.apache.commons.lang3.EnumUtils;
 
 import java.sql.Connection;
@@ -11,13 +13,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class RoleRepositoryImpl implements RoleRepository {
-    private static Connection connection;
+    private Connection connection;
 
     public RoleRepositoryImpl() throws SQLException {
         connection = JdbcConnection.getConnection();
     }
     @Override
-    public Role findByName(String roleName) throws SQLException {
+    public Role findByName(String roleName) throws SQLException, RoleRepositoryException
+    {
         Role role;
         ResultSet resultSet =
                 connection.createStatement().executeQuery(String.format("SELECT * FROM roles WHERE name = '%s'", roleName));
@@ -30,8 +33,6 @@ public class RoleRepositoryImpl implements RoleRepository {
             role.setUpdated(resultSet.getDate("updatedAt"));
             return role;
         }
-
-        //todo
-        throw new SQLException();
+        throw new RoleRepositoryException(String.format("IN findByName there is no role found by name %s", roleName));
     }
 }

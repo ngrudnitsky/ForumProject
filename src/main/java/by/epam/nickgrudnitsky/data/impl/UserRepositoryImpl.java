@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserRepositoryImpl implements UserRepository {
-    private static Connection connection;
+    private Connection connection;
 
     public UserRepositoryImpl() throws SQLException {
         connection = JdbcConnection.getConnection();
