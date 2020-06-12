@@ -4,4 +4,12 @@
 
 <web-app>
   <display-name>Archetype Created Web Application</display-name>
+  <servlet>
+    <servlet-name>Controller</servlet-name>
+    <servlet-class>by.epam.nickgrudnitsky.controller.Controller</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Controller</servlet-name>
+    <url-pattern>/do</url-pattern>
+  </servlet-mapping>
 </web-app>

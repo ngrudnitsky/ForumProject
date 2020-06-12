@@ -1,6 +1,6 @@
 package by.epam.nickgrudnitsky.data.impl;
 
-import by.epam.nickgrudnitsky.JdbcConnection;
+import by.epam.nickgrudnitsky.util.JdbcConnection;
 import by.epam.nickgrudnitsky.data.UserRepository;
 import by.epam.nickgrudnitsky.entity.Status;
 import by.epam.nickgrudnitsky.entity.User;
@@ -12,18 +12,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserRepositoryImpl implements UserRepository {
-    private Connection connection;
-
-    public UserRepositoryImpl() throws SQLException {
-        connection = JdbcConnection.getConnection();
-    }
+    private Connection connection = JdbcConnection.getConnection();
 
     @Override
     public User findByUsername(String userName) throws SQLException, UserRepositoryException {
         User user;
         ResultSet resultSet =
                 connection.createStatement().executeQuery(String.format("SELECT * FROM users WHERE userName = '%s'", userName));
-        if (resultSet.next()){
+        if (resultSet.next()) {
             user = new User();
             user.setId(resultSet.getInt("id"));
             user.setFirstName(resultSet.getString("firstName"));
@@ -63,7 +59,7 @@ public class UserRepositoryImpl implements UserRepository {
         List<User> users = new ArrayList<>();
         ResultSet resultSet =
                 connection.createStatement().executeQuery("SELECT userName FROM users");
-        while (resultSet.next()){
+        while (resultSet.next()) {
             users.add(findByUsername(resultSet.getString(1)));
         }
         return users;
@@ -91,7 +87,7 @@ public class UserRepositoryImpl implements UserRepository {
         User user;
         ResultSet resultSet =
                 connection.createStatement().executeQuery(String.format("SELECT * FROM users WHERE id = '%s'", id));
-        if (resultSet.next()){
+        if (resultSet.next()) {
             user = new User();
             user.setId(id);
             user.setFirstName(resultSet.getString("firstName"));
