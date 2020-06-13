@@ -1,4 +1,4 @@
-package by.epam.nickgrudnitsky;
+package by.epam.nickgrudnitsky.util;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -75,9 +75,14 @@ public class JdbcConnection {
         }
     }
 
-    public static Connection getConnection() throws SQLException {
-        if (connection == null || connection.isClosed()) {
-            connection = DriverManager.getConnection(URL, USER_NAME, PASSWORD);
+    public static Connection getConnection()  {
+        try {
+            if (connection == null || connection.isClosed()) {
+                connection = DriverManager.getConnection(URL, USER_NAME, PASSWORD);
+            }
+        } catch (SQLException e) {
+            /// TODO: 6/6/20
+            e.printStackTrace();
         }
         return connection;
     }

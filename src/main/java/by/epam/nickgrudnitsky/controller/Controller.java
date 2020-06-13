@@ -1,47 +1,48 @@
 package by.epam.nickgrudnitsky.controller;
 
-import by.epam.nickgrudnitsky.controller.command.Command;
-import by.epam.nickgrudnitsky.controller.command.impl.WrongCommand;
+import org.apache.commons.lang3.EnumUtils;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class Controller extends HttpServlet {
-    private final CommandProvider commandProvider = new CommandProvider();
-
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        executeTask(req, resp);
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        executeCommand(req, resp);
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        executeTask(req, resp);
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        executeCommand(req, resp);
     }
 
-    public void executeTask(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Command command = define(req);
-        JSP jsp = command.execute(req, resp);
-        forwardToJsp(req, resp, jsp);
-    }
-
-    private Command define(HttpServletRequest req) {
-        Command result = new WrongCommand();
-        String commandName = req.getParameter("command");
-        if (commandName != null && !commandName.isEmpty()) {
-            result = commandProvider.getCommand(commandName);
+    public void executeCommand(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        Action currentAction = define(req);
+        Action next = currentAction.getCommand().execute(req, resp);
+        if (next == null || next.equals(currentAction)) {
+            resp.sendRedirect(req.getContextPath() + currentAction.getJspAddress());
+        } else {
+            resp.sendRedirect("do?command=" + next.name());
         }
-        return result;
     }
 
-    private void forwardToJsp(HttpServletRequest req, HttpServletResponse resp, JSP jsp) throws ServletException, IOException {
-        ServletContext servletContext = req.getServletContext();
-        RequestDispatcher requestDispatcher = servletContext.getRequestDispatcher(jsp.getJspAddress());
-        requestDispatcher.forward(req, resp);
+    private Action define(HttpServletRequest req) {
+        Action result = Action.ERROR;
+        String commandName = req.getParameter("command");
+        if (commandName == null || commandName.isEmpty()) {
+            return result;
+        }
+        return getCommand(commandName);
+    }
+
+    private Action getCommand(String input) {
+        try {
+            String commandName = input.toUpperCase().replace(" ", "_");
+            return EnumUtils.getEnum(Action.class, commandName);
+        } catch (IllegalArgumentException e) {
+            return Action.ERROR;
+        }
     }
 }

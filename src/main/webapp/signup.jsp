@@ -2,7 +2,7 @@
 <html>
 <%@ include file="include/head.htm" %>
 <body>
-<form class="form-horizontal" action="do?command=Sign Up" method="POST">
+<form class="form-horizontal" action="do?command=join" method="POST">
 <fieldset>
 
 <!-- Form Name -->
@@ -10,7 +10,7 @@
 
 <!-- Text input-->
 <div class="form-group">
-  <label class="col-md-4 control-label" for="firstName">Username</label>
+  <label class="col-md-4 control-label" for="firstName">First Name</label>
   <div class="col-md-4">
   <input id="firstName" name="firstName" value="testFirstName" type="text" placeholder="" class="form-control input-md" required="">
   </div>
@@ -18,7 +18,7 @@
 
 <!-- Text input-->
 <div class="form-group">
-  <label class="col-md-4 control-label" for="lastName">Username</label>
+  <label class="col-md-4 control-label" for="lastName">Last Name</label>
   <div class="col-md-4">
   <input id="lastName" name="lastName" value="testLastName" type="text" placeholder="" class="form-control input-md" required="">
   </div>
@@ -26,7 +26,7 @@
 
 <!-- Text input-->
 <div class="form-group">
-  <label class="col-md-4 control-label" for="userName">Username</label>
+  <label class="col-md-4 control-label" for="userName">User Name</label>
   <div class="col-md-4">
   <input id="userName" name="userName" value="testUserName" type="text" placeholder="" class="form-control input-md" required="">
   </div>
@@ -34,9 +34,9 @@
 
 <!-- Password input-->
 <div class="form-group">
-  <label class="col-md-4 control-label" for="password">Password</label>
+  <label class="col-md-4 control-label" for="password">Password (Minimum eight characters, at least one letter and one number:)</label>
   <div class="col-md-4">
-    <input id="password" name="password" value="testPassword" type="password" placeholder="" class="form-control input-md" required="">
+    <input id="password" name="password" value="testPassword1" type="password" placeholder="" class="form-control input-md" required="">
   </div>
 </div>
 
