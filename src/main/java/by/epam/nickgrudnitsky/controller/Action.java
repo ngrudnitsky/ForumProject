@@ -1,15 +1,14 @@
 package by.epam.nickgrudnitsky.controller;
 
 import by.epam.nickgrudnitsky.controller.command.Command;
-import by.epam.nickgrudnitsky.controller.command.impl.LogInCommand;
-import by.epam.nickgrudnitsky.controller.command.impl.ProfileCommand;
-import by.epam.nickgrudnitsky.controller.command.impl.SignUpCommand;
-import by.epam.nickgrudnitsky.controller.command.impl.WrongCommand;
+import by.epam.nickgrudnitsky.controller.command.impl.*;
 
 public enum Action {
     PROFILE("/profile", new ProfileCommand()),
+    WRITING("/writing", new WritePostCommand()),
     JOIN("/join", new SignUpCommand()),
     LOG_IN("/login", new LogInCommand()),
+    MAIN_PAGE("/feed", new MainPageCommand()),
     ERROR("/error", new WrongCommand());
 
     private String jspAddress;

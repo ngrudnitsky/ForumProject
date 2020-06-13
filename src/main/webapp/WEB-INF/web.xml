@@ -5,6 +5,15 @@
 <web-app>
     <display-name>Archetype Created Web Application</display-name>
     <servlet>
+        <servlet-name>MainPage</servlet-name>
+        <servlet-class>by.epam.nickgrudnitsky.servlet.MainPageServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>MainPage</servlet-name>
+        <url-pattern>/feed</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>Controller</servlet-name>
         <servlet-class>by.epam.nickgrudnitsky.controller.Controller</servlet-class>
     </servlet>
@@ -20,6 +29,15 @@
     <servlet-mapping>
         <servlet-name>profile</servlet-name>
         <url-pattern>/profile</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>writing</servlet-name>
+        <jsp-file>/writing.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>writing</servlet-name>
+        <url-pattern>/writing</url-pattern>
     </servlet-mapping>
 
     <servlet>
@@ -56,6 +74,17 @@
     <filter-mapping>
         <filter-name>SessionFilter</filter-name>
         <url-pattern>/profile</url-pattern>
+        <url-pattern>/writing</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>LoginFilter</filter-name>
+        <filter-class>by.epam.nickgrudnitsky.filter.LoginFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>LoginFilter</filter-name>
+        <url-pattern>/login</url-pattern>
+        <url-pattern>/join</url-pattern>
     </filter-mapping>
 
     <filter>

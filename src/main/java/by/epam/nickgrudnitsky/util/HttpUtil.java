@@ -15,11 +15,16 @@ public class HttpUtil {
     public static String getRequestParameter(HttpServletRequest req, String parameterName, String patter)
             throws ParameterValidationException {
         String parameter = req.getParameter(parameterName);
-        if (parameter.matches(patter)) {
+        if (parameter!= null && parameter.matches(patter)) {
             return parameter;
         }
         throw new ParameterValidationException(
                 String.format("Wrong value %s of %s parameter.", parameter, parameterName));
+    }
+
+    public static boolean isRequestParameterPresented(HttpServletRequest req, String parameterName, String patter) {
+        String parameter = req.getParameter(parameterName);
+        return parameter != null && parameter.matches(patter);
     }
 
     public static boolean isMethodPost(HttpServletRequest req) {

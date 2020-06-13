@@ -11,7 +11,7 @@ public class JdbcConnection {
     public static final String PASSWORD = "root";
     private static Connection connection;
 
-    static void reset() throws SQLException {
+    public static void reset() throws SQLException {
         try (Connection connection = JdbcConnection.getConnection()) {
             Statement statement = connection.createStatement();
             statement.executeUpdate("DROP SCHEMA IF EXISTS `mydb` ;");
