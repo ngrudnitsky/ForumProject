@@ -7,20 +7,17 @@ import by.epam.nickgrudnitsky.exception.UserRepositoryException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class UserRepositoryImplTest
-{
+class UserRepositoryImplTest {
     private UserRepositoryImpl userRepository;
     private User user;
 
     @BeforeEach
-    void initialize() throws SQLException
-    {
+    void initialize() {
         userRepository = new UserRepositoryImpl();
         user = new User();
         user.setId(-1);
@@ -35,52 +32,45 @@ class UserRepositoryImplTest
     }
 
     @Test
-    void findByUsername() throws SQLException, UserRepositoryException
-    {
+    void findByUsername() throws UserRepositoryException {
         String userName = "NickGS";
         User nickGS = userRepository.findByUsername(userName);
         assertEquals(nickGS.getUserName(), userName);
     }
 
     @Test
-    void findByUsernameWithWrongName()
-    {
+    void findByUsernameWithWrongName() {
         assertThrows(UserRepositoryException.class, () ->
                 userRepository.findByUsername("vghhh"));
     }
 
     @Test
-    void save() throws SQLException
-    {
+    void save() throws UserRepositoryException {
         User savesUser = userRepository.save(user);
         assertNotNull(savesUser);
     }
 
     @Test
-    void findAll() throws SQLException, UserRepositoryException
-    {
+    void findAll() throws UserRepositoryException {
         List<User> users = userRepository.findAll();
         assertNotNull(users);
     }
 
     @Test
-    void update() throws SQLException
-    {
+    void update() throws UserRepositoryException {
         User savesUser = userRepository.update(user);
         assertNotNull(savesUser);
     }
 
     @Test
-    void findById() throws SQLException, UserRepositoryException
-    {
+    void findById() throws UserRepositoryException {
         int id = 1;
         User nickGS = userRepository.findById(id);
         assertEquals(nickGS.getId(), id);
     }
 
     @Test
-    void findByIdWithWrongId()
-    {
+    void findByIdWithWrongId() {
         assertThrows(UserRepositoryException.class, () ->
                 userRepository.findById(Integer.MAX_VALUE));
     }

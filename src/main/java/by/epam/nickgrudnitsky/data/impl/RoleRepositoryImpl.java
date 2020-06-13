@@ -13,23 +13,29 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class RoleRepositoryImpl implements RoleRepository {
-    private Connection connection= JdbcConnection.getConnection();
+    private static final String FIND_BY_NAME_QUERY = "SELECT * FROM roles WHERE name = '%s'";
+
+    private Connection connection = JdbcConnection.getConnection();
 
     @Override
-    public Role findByName(String roleName) throws SQLException, RoleRepositoryException
-    {
-        Role role;
-        ResultSet resultSet =
-                connection.createStatement().executeQuery(String.format("SELECT * FROM roles WHERE name = '%s'", roleName));
-        if (resultSet.next()) {
-            role = new Role();
-            role.setId(resultSet.getInt("id"));
-            role.setName(roleName);
-            role.setStatus(EnumUtils.getEnum(Status.class, resultSet.getString("status")));
-            role.setCreated(resultSet.getDate("createdAt"));
-            role.setUpdated(resultSet.getDate("updatedAt"));
-            return role;
+    public Role findByName(String roleName) throws RoleRepositoryException {
+        String ERROR_MESSAGE = "IN RoleRepositoryImpl failed to find role by name %s";
+        try {
+            Role role = new Role();
+            ResultSet resultSet = connection.createStatement().executeQuery(String.format(FIND_BY_NAME_QUERY, roleName));
+            if (resultSet.next()) {
+                role.setId(resultSet.getInt("id"));
+                role.setName(roleName);
+                role.setStatus(EnumUtils.getEnum(Status.class, resultSet.getString("status")));
+                role.setCreated(resultSet.getDate("createdAt"));
+                role.setUpdated(resultSet.getDate("updatedAt"));
+                return role;
+            }
+        } catch (SQLException e) {
+            throw new RoleRepositoryException(
+                    String.format(ERROR_MESSAGE, roleName), e);
         }
-        throw new RoleRepositoryException(String.format("IN findByName there is no role found by name %s", roleName));
+        throw new RoleRepositoryException(
+                String.format(ERROR_MESSAGE, roleName));
     }
 }

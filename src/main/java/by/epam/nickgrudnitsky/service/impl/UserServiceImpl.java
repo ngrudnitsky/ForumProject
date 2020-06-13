@@ -15,7 +15,6 @@ import by.epam.nickgrudnitsky.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -27,14 +26,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User register(User user) throws UserServiceException {
-        if (user == null){
+        if (user == null) {
             log.error("IN register - user is null");
             throw new UserServiceException("Null user tried to be registered.");
         }
         Role roleUser;
         try {
             roleUser = roleRepository.findByName("USER");
-        } catch (SQLException | RoleRepositoryException e) {
+        } catch (RoleRepositoryException e) {
             log.error("IN register - there is no role User", e);
             throw new UserServiceException(e.getMessage(), e);
         }
@@ -49,7 +48,7 @@ public class UserServiceImpl implements UserService {
         User registeredUser;
         try {
             registeredUser = userRepository.save(user);
-        } catch (SQLException e) {
+        } catch (UserRepositoryException e) {
             log.error("IN register - failed to save user");
             throw new UserServiceException("Failed to save user.", e);
         }
@@ -62,7 +61,7 @@ public class UserServiceImpl implements UserService {
         List<User> result;
         try {
             result = userRepository.findAll();
-        } catch (SQLException | UserRepositoryException e) {
+        } catch (UserRepositoryException e) {
             log.error("IN getAll - failed to get all users");
             throw new UserServiceException("Failed to get all users", e);
         }
@@ -73,12 +72,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findByUsername(String username) throws UserServiceException {
         User result;
-        if (username == null){
+        if (username == null) {
             throw new UserServiceException("Null userName was found");
         }
         try {
             result = userRepository.findByUsername(username);
-        } catch (SQLException | UserRepositoryException e) {
+        } catch (UserRepositoryException e) {
             log.error("IN findByUsername - failed to find user by userName {}", username);
             throw new UserServiceException(String.format("Failed to find user by userName %s", username), e);
         }
@@ -89,12 +88,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findById(Integer id) throws UserServiceException {
         User result;
-        if (id == null){
+        if (id == null) {
             throw new UserServiceException("Null id was found");
         }
         try {
             result = userRepository.findById(id);
-        } catch (SQLException | UserRepositoryException e) {
+        } catch (UserRepositoryException e) {
             log.error("IN findById - failed to find user by id {}", id);
             throw new UserServiceException(String.format("Failed to find user by id %s", id), e);
         }
@@ -104,13 +103,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete(Integer id) throws UserServiceException {
-        if (id == null){
+        if (id == null) {
             throw new UserServiceException("Null userName was found");
         }
         User user;
         try {
             user = userRepository.findById(id);
-        } catch (SQLException | UserRepositoryException e) {
+        } catch (UserRepositoryException e) {
             log.error("IN delete - failed to delete user by id {}", id);
             throw new UserServiceException(String.format("Failed to delete user by id %s", id), e);
         }
@@ -118,7 +117,7 @@ public class UserServiceImpl implements UserService {
         user.setUpdated(new Date());
         try {
             userRepository.update(user);
-        } catch (SQLException e) {
+        } catch (UserRepositoryException e) {
             log.error("IN delete - failed to update user by id {}", id);
             throw new UserServiceException(String.format("Failed to delete user by id %s", id), e);
         }

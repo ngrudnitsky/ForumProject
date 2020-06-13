@@ -6,30 +6,24 @@ import by.epam.nickgrudnitsky.exception.RoleRepositoryException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.sql.SQLException;
-
 import static org.junit.jupiter.api.Assertions.*;
 
-class RoleRepositoryImplTest
-{
+class RoleRepositoryImplTest {
     private RoleRepositoryImpl roleRepository;
 
     @BeforeEach
-    void initialize() throws SQLException
-    {
+    void initialize() {
         roleRepository = new RoleRepositoryImpl();
     }
 
     @Test
-    void findRoleByName() throws SQLException, RoleRepositoryException
-    {
+    void findRoleByName() throws RoleRepositoryException {
         Role roleUser = roleRepository.findByName("USER");
         assertEquals(roleUser.getName(), "USER");
     }
 
     @Test
-    void findRoleByNameWithWrongName()
-    {
+    void findRoleByNameWithWrongName() {
         assertThrows(RoleRepositoryException.class, () ->
                 roleRepository.findByName("wrongName"));
     }
