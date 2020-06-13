@@ -10,7 +10,7 @@ public interface PostRepository {
 
     Post update(Post post) throws PostRepositoryException;
 
-    Post save(Post post) throws PostRepositoryException;
+    Post create(Post post) throws PostRepositoryException;
 
     List<Post> findAll() throws PostRepositoryException;
 

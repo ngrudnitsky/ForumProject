@@ -17,13 +17,13 @@ public class PostRepositoryImpl implements PostRepository {
             "createdAt, updatedAt, users_id)VALUES(?,?,?,?,?,?)";
     private static final String FIND_ALL_POSTS_QUERY = "SELECT id FROM posts";
     private static final String UPDATE_POST_QUERY = "UPDATE posts SET title = ?, content = ?, status = ?, " +
-            "updatedAt = ? WHERE id = ?";
+            "updatedAt= ?, users_id = ? WHERE id = ?";
 
     private final Connection connection = JdbcConnection.getConnection();
 
     @Override
     public Post findById(Integer id) throws PostRepositoryException {
-        String ERROR_MESSAGE = "IN PostRepositoryImpl failed to find post id %d";
+        String errorMessage = "IN PostRepositoryImpl failed to find post id %d";
         try {
             Post post = new Post();
             ResultSet resultSet = connection.createStatement().executeQuery(String.format(FIND_BY_ID_QUERY, id));
@@ -34,14 +34,15 @@ public class PostRepositoryImpl implements PostRepository {
                 post.setCreated(resultSet.getDate("createdAt"));
                 post.setUpdated(resultSet.getDate("updatedAt"));
                 post.setStatus(EnumUtils.getEnum(Status.class, resultSet.getString("status")));
+                post.setUserId(resultSet.getInt("users_id"));
                 return post;
             }
         } catch (SQLException e) {
             throw new PostRepositoryException(
-                    String.format(ERROR_MESSAGE, id), e);
+                    String.format(errorMessage, id), e);
         }
         throw new PostRepositoryException(
-                String.format(ERROR_MESSAGE, id));
+                String.format(errorMessage, id));
     }
 
     @Override
@@ -52,7 +53,8 @@ public class PostRepositoryImpl implements PostRepository {
             preparedStatement.setString(2, post.getContent());
             preparedStatement.setString(3, post.getStatus().name());
             preparedStatement.setDate(4, new Date(post.getCreated().getTime()));
-            preparedStatement.setInt(5, post.getId());
+            preparedStatement.setInt(5, post.getUserId());
+            preparedStatement.setInt(6, post.getId());
             preparedStatement.executeUpdate();
             return post;
         } catch (SQLException e) {
@@ -62,7 +64,7 @@ public class PostRepositoryImpl implements PostRepository {
     }
 
     @Override
-    public Post save(Post post) throws PostRepositoryException {
+    public Post create(Post post) throws PostRepositoryException {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(SAVE_POST_QUERY);
             preparedStatement.setString(1, post.getTitle());

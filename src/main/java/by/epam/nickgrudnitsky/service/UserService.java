@@ -8,11 +8,11 @@ import java.util.List;
 public interface UserService {
     User register(User user) throws UserServiceException;
 
-    List<User> getAll() throws UserServiceException;
+    List<User> findAll() throws UserServiceException;
 
     User findByUsername(String username) throws UserServiceException;
 
     User findById(Integer id) throws UserServiceException;
 
-    void delete(Integer id) throws UserServiceException;
+    User deleteById(Integer id) throws UserServiceException;
 }

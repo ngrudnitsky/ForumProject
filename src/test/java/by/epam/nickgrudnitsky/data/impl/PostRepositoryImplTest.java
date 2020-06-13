@@ -49,7 +49,7 @@ class PostRepositoryImplTest {
 
     @Test
     void save() throws PostRepositoryException {
-        Post savedPost = postRepository.save(post);
+        Post savedPost = postRepository.create(post);
         assertNotNull(savedPost);
     }
 

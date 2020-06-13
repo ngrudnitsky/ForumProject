@@ -27,45 +27,47 @@ public class UserServiceImpl implements UserService {
     @Override
     public User register(User user) throws UserServiceException {
         if (user == null) {
-            log.error("IN register - user is null");
-            throw new UserServiceException("Null user tried to be registered.");
+            String errorMessage = "IN UserServiceImpl.register - user is null";
+            log.error(errorMessage);
+            throw new UserServiceException(errorMessage);
         }
         Role roleUser;
         try {
             roleUser = roleRepository.findByName("USER");
         } catch (RoleRepositoryException e) {
-            log.error("IN register - there is no role User", e);
-            throw new UserServiceException(e.getMessage(), e);
+            String errorMessage = "IN UserServiceImpl.register - there is no role USER";
+            log.error(errorMessage, e);
+            throw new UserServiceException(errorMessage, e);
         }
         List<Role> userRoles = new ArrayList<>();
         userRoles.add(roleUser);
-
         user.setRoles(userRoles);
         user.setStatus(Status.ACTIVE);
         user.setCreated(new Date());
         user.setUpdated(new Date());
-
         User registeredUser;
         try {
             registeredUser = userRepository.save(user);
         } catch (UserRepositoryException e) {
-            log.error("IN register - failed to save user");
-            throw new UserServiceException("Failed to save user.", e);
+            String errorMessage = "IN UserServiceImpl.register - failed to register user";
+            log.error(errorMessage);
+            throw new UserServiceException(errorMessage, e);
         }
-        log.info("IN register - user: {} successfully registered", registeredUser);
+        log.info("IN UserServiceImpl.register - user: {} successfully registered", registeredUser);
         return registeredUser;
     }
 
     @Override
-    public List<User> getAll() throws UserServiceException {
+    public List<User> findAll() throws UserServiceException {
         List<User> result;
         try {
             result = userRepository.findAll();
         } catch (UserRepositoryException e) {
-            log.error("IN getAll - failed to get all users");
-            throw new UserServiceException("Failed to get all users", e);
+            String errorMessage = "IN UserServiceImpl.getAll - failed to get all users";
+            log.error(errorMessage);
+            throw new UserServiceException(errorMessage, e);
         }
-        log.info("IN getAll - {} users found", result.size());
+        log.info("IN UserServiceImpl.getAll - {} users found", result.size());
         return result;
     }
 
@@ -73,15 +75,19 @@ public class UserServiceImpl implements UserService {
     public User findByUsername(String username) throws UserServiceException {
         User result;
         if (username == null) {
-            throw new UserServiceException("Null userName was found");
+            String errorMessage = "IN UserServiceImpl.findByUsername - Null userName was found";
+            log.error(errorMessage);
+            throw new UserServiceException(errorMessage);
         }
         try {
             result = userRepository.findByUsername(username);
         } catch (UserRepositoryException e) {
-            log.error("IN findByUsername - failed to find user by userName {}", username);
-            throw new UserServiceException(String.format("Failed to find user by userName %s", username), e);
+            String errorMessage = String.format(
+                    "IN UserServiceImpl.findByUsername - Failed to find user by userName %s", username);
+            log.error(errorMessage);
+            throw new UserServiceException(errorMessage);
         }
-        log.info("IN findByUsername - user: {} found by username: {}", result, username);
+        log.info("IN UserServiceImpl.findByUsername - user: {} found by username: {}", result, username);
         return result;
     }
 
@@ -89,38 +95,46 @@ public class UserServiceImpl implements UserService {
     public User findById(Integer id) throws UserServiceException {
         User result;
         if (id == null) {
-            throw new UserServiceException("Null id was found");
+            String errorMessage = "IN UserServiceImpl.findById - Null id was found";
+            log.error(errorMessage);
+            throw new UserServiceException(errorMessage);
         }
         try {
             result = userRepository.findById(id);
         } catch (UserRepositoryException e) {
-            log.error("IN findById - failed to find user by id {}", id);
-            throw new UserServiceException(String.format("Failed to find user by id %s", id), e);
+            String errorMessage = String.format("IN UserServiceImpl.findById - Failed to find user by id %s", id);
+            log.error(errorMessage);
+            throw new UserServiceException(errorMessage, e);
         }
-        log.info("IN findById - user: {} found by id: {}", result, id);
+        log.info("IN UserServiceImpl.findById - user: {} found by id: {}", result, id);
         return result;
     }
 
     @Override
-    public void delete(Integer id) throws UserServiceException {
+    public User deleteById(Integer id) throws UserServiceException {
         if (id == null) {
-            throw new UserServiceException("Null userName was found");
+            String errorMessage = "IN UserServiceImpl.delete - Null id was found";
+            log.error(errorMessage);
+            throw new UserServiceException(errorMessage);
         }
         User user;
         try {
             user = userRepository.findById(id);
         } catch (UserRepositoryException e) {
-            log.error("IN delete - failed to delete user by id {}", id);
-            throw new UserServiceException(String.format("Failed to delete user by id %s", id), e);
+            String errorMessage = String.format("IN UserServiceImpl.delete - Failed to delete user by id %s", id);
+            log.error(errorMessage);
+            throw new UserServiceException(errorMessage, e);
         }
         user.setStatus(Status.DELETED);
         user.setUpdated(new Date());
         try {
             userRepository.update(user);
         } catch (UserRepositoryException e) {
-            log.error("IN delete - failed to update user by id {}", id);
-            throw new UserServiceException(String.format("Failed to delete user by id %s", id), e);
+            String errorMessage = String.format("IN UserServiceImpl.delete - Failed to delete user by id %s", id);
+            log.error(errorMessage);
+            throw new UserServiceException(errorMessage, e);
         }
-        log.info("IN delete - user with id: {} successfully deleted", id);
+        log.info("IN UserServiceImpl.delete - user with id: {} successfully deleted", id);
+        return user;
     }
 }
