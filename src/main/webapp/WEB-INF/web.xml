@@ -32,6 +32,15 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>editPost</servlet-name>
+        <jsp-file>/editPost.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>editPost</servlet-name>
+        <url-pattern>/edit</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>writing</servlet-name>
         <jsp-file>/writing.jsp</jsp-file>
     </servlet>
@@ -75,6 +84,7 @@
         <filter-name>SessionFilter</filter-name>
         <url-pattern>/profile</url-pattern>
         <url-pattern>/writing</url-pattern>
+        <url-pattern>/edit</url-pattern>
     </filter-mapping>
 
     <filter>

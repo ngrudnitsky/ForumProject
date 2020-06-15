@@ -27,7 +27,7 @@ public class SignUpCommand implements Command {
             if (isMethodPost(req)) {
                 User user = new User();
                 registerUser(req, user);
-                createSession(req, "user", user);
+                setSessionAttribute(req, "user", user);
                 setCookie(resp, "password", user.getPassword());
                 setCookie(resp, "userName", user.getUserName());
                 return Action.PROFILE;
@@ -35,8 +35,9 @@ public class SignUpCommand implements Command {
         } catch (UserServiceException e) {
             log.error("IN SignUpCommand - failed to register user.");
         } catch (ParameterValidationException e) {
-            log.error(String.format("IN SignUpCommand - failed to validate parameter.%n%s", e.getMessage()));
+            log.error("IN SignUpCommand - failed to validate parameter.", e);
         }
+        req.getSession().invalidate();
         return Action.JOIN;
     }
 

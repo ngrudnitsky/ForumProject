@@ -21,9 +21,6 @@ public class LogInCommand implements Command {
 
     @Override
     public Action execute(HttpServletRequest req, HttpServletResponse resp) {
-        if (isUserLoggedIn(req)) {
-            return Action.PROFILE;
-        }
         try {
             if (isMethodPost(req)) {
                 String userName = getRequestParameter(req, "username", USER_NAME_PATTERN);
@@ -32,7 +29,7 @@ public class LogInCommand implements Command {
                 User user = userService.findByUsername(userName);
 
                 if (user.getPassword().equals(password)) {
-                    createSession(req, "user", user);
+                    setSessionAttribute(req, "user", user);
                     setCookie(resp, "password", user.getPassword());
                     setCookie(resp, "userName", user.getUserName());
                     return Action.PROFILE;

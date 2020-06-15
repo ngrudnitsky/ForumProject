@@ -17,7 +17,7 @@ public class PostRepositoryImpl implements PostRepository {
             "createdAt, updatedAt, users_id)VALUES(?,?,?,?,?,?)";
     private static final String FIND_ALL_POSTS_QUERY = "SELECT id FROM posts";
     private static final String UPDATE_POST_QUERY = "UPDATE posts SET title = ?, content = ?, status = ?, " +
-            "updatedAt= ?, users_id = ? WHERE id = ?";
+            "updatedAt= ? WHERE id = ?";
 
     private final Connection connection = JdbcConnection.getConnection();
 
@@ -52,9 +52,8 @@ public class PostRepositoryImpl implements PostRepository {
             preparedStatement.setString(1, post.getTitle());
             preparedStatement.setString(2, post.getContent());
             preparedStatement.setString(3, post.getStatus().name());
-            preparedStatement.setDate(4, new Date(post.getCreated().getTime()));
-            preparedStatement.setInt(5, post.getUserId());
-            preparedStatement.setInt(6, post.getId());
+            preparedStatement.setDate(4, new Date(post.getUpdated().getTime()));
+            preparedStatement.setInt(5, post.getId());
             preparedStatement.executeUpdate();
             return post;
         } catch (SQLException e) {

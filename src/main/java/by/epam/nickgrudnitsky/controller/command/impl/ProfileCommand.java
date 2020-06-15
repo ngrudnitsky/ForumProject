@@ -10,23 +10,21 @@ import static by.epam.nickgrudnitsky.util.HttpUtil.*;
 
 
 public class ProfileCommand implements Command {
-    private static final String LOGOUT_PARAMETER = "logout";
-    private static final String CREATE_POST_PARAMETER = "create post";
-    private static final String PATTERN = "true";
-
     @Override
     public Action execute(HttpServletRequest req, HttpServletResponse resp) {
-        if (isMethodGet(req) && isUserLoggedIn(req)) {
-            return Action.PROFILE;
-        }
+        final String pattern = "true";
         if (isMethodPost(req)) {
-            if (isRequestParameterPresented(req, LOGOUT_PARAMETER, PATTERN)) {
+            if (isRequestParameterPresented(req, "logout", pattern)) {
                 req.getSession().invalidate();
+                return Action.LOG_IN;
             }
-            if (isRequestParameterPresented(req, CREATE_POST_PARAMETER, PATTERN)) {
+            if (isRequestParameterPresented(req, "create post", pattern)) {
                 return Action.WRITING;
             }
+            if (isRequestParameterPresented(req, "edit posts", pattern)) {
+                return Action.EDIT_POST;
+            }
         }
-        return Action.LOG_IN;
+        return Action.PROFILE;
     }
 }

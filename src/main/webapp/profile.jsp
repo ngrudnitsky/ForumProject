@@ -21,6 +21,13 @@
     <button id="create post" name="create post" value="true" class="btn btn-success">New Post</button>
  </div>
 </div>
+<!-- Button -->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="singlebutton"></label>
+  <div class="col-md-4">
+    <button id="edit posts" name="edit posts" value="true" class="btn btn-success">Edit Posts</button>
+ </div>
+</div>
 </form>
 </body>
 </html>

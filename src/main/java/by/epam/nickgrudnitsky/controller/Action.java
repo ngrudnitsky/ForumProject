@@ -9,10 +9,11 @@ public enum Action {
     JOIN("/join", new SignUpCommand()),
     LOG_IN("/login", new LogInCommand()),
     MAIN_PAGE("/feed", new MainPageCommand()),
+    EDIT_POST("/edit", new EditPostsCommand()),
     ERROR("/error", new WrongCommand());
 
-    private String jspAddress;
-    private Command command;
+    private final String jspAddress;
+    private final Command command;
 
     Action(String jspAddress, Command command) {
         this.jspAddress = jspAddress;

@@ -39,6 +39,24 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public Post updatePost(Post post) throws PostServiceException {
+        if (post == null) {
+            String errorMessage = "IN PostServiceImpl.updatePost  - user is null";
+            log.error(errorMessage);
+            throw new PostServiceException(errorMessage);
+        }
+        try {
+            Post createdPost = postRepository.update(post);
+            log.info("IN PostServiceImpl.create - post: {} successfully registered", createdPost);
+            return createdPost;
+        } catch (PostRepositoryException e) {
+            String errorMessage = String.format("IN PostServiceImpl - failed to create post %s", post);
+            log.error(errorMessage);
+            throw new PostServiceException(errorMessage, e);
+        }
+    }
+
+    @Override
     public List<Post> findAll() throws PostServiceException {
         List<Post> result;
         try {
