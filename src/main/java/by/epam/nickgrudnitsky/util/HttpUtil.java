@@ -55,9 +55,9 @@ public class HttpUtil {
         resp.addCookie(cookie);
     }
 
-    public static void setSessionAttribute(HttpServletRequest req, String name, Object value) {
+    public static HttpSession setSessionAttribute(HttpServletRequest req, String name, Object value) {
         HttpSession session = req.getSession();
-        session.setMaxInactiveInterval(10);
         session.setAttribute(name, value);
+        return session;
     }
 }

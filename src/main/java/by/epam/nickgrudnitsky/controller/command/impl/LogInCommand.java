@@ -10,6 +10,7 @@ import by.epam.nickgrudnitsky.service.impl.UserServiceImpl;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import static by.epam.nickgrudnitsky.util.HttpUtil.*;
 
@@ -28,14 +29,10 @@ public class LogInCommand implements Command {
 
                 User user = userService.findByUsername(userName);
                 if (user.getPassword().equals(password)) {
-                    setSessionAttribute(req, "user", user);
-                    setCookie(resp, "password", user.getPassword());
-                    setCookie(resp, "userName", user.getUserName());
-                    if (userService.checkIfAdmin(user)) {
-                        setSessionAttribute(req, "admin", "true");
-                    } else {
-                        setSessionAttribute(req, "admin", "false");
-                    }
+                    HttpSession userSession = setSessionAttribute(req, "user", user);
+                    userSession.setMaxInactiveInterval(600);
+                    HttpSession adminSession = setSessionAttribute(req, "admin", userService.checkIfAdmin(user) ? "true" : "false");
+                    adminSession.setMaxInactiveInterval(600);
                     return Action.PROFILE;
                 }
             }

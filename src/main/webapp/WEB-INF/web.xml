@@ -59,6 +59,15 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>post</servlet-name>
+        <jsp-file>/post.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>post</servlet-name>
+        <url-pattern>/post</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>join</servlet-name>
         <jsp-file>/signup.jsp</jsp-file>
     </servlet>

@@ -2,6 +2,7 @@ package by.epam.nickgrudnitsky.controller.command.impl;
 
 import by.epam.nickgrudnitsky.controller.Action;
 import by.epam.nickgrudnitsky.controller.command.Command;
+import by.epam.nickgrudnitsky.dto.MainPagePostDTO;
 import by.epam.nickgrudnitsky.entity.Post;
 import by.epam.nickgrudnitsky.entity.User;
 import by.epam.nickgrudnitsky.exception.ParameterValidationException;
@@ -16,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import static by.epam.nickgrudnitsky.util.HttpUtil.*;
 
 public class WritePostCommand implements Command {
-    private static final String NAME_PATTERN = "[A-Za-zА-Яа-я]+";
+    private static final String NAME_PATTERN = ".*";
 
     private final PostService postService = new PostServiceImpl();
 
@@ -24,9 +25,13 @@ public class WritePostCommand implements Command {
     public Action execute(HttpServletRequest req, HttpServletResponse resp) {
         try {
             if (isMethodPost(req)) {
-                Post post = new Post();
-                createNewPost(req, post);
-                return Action.MAIN_PAGE;
+                Post createdPost = new Post();
+                createNewPost(req, createdPost);
+                MainPagePostDTO post = MainPagePostDTO.fromUser(createdPost);
+                User user = (User)req.getSession().getAttribute("user");
+                post.setUser(user);
+                setSessionAttribute(req,"post", post);
+                return Action.POST;
             }
         } catch (ParameterValidationException e) {
             log.error(String.format("IN SignUpCommand - failed to validate parameter.%n%s", e.getMessage()));

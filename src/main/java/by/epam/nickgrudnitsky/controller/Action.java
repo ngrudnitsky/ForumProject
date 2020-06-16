@@ -8,6 +8,7 @@ public enum Action {
     WRITING("/writing", new WritePostCommand()),
     JOIN("/join", new SignUpCommand()),
     LOG_IN("/login", new LogInCommand()),
+    POST("/post", new PostCommand()),
     LOG_OUT("", new LogOutCommand()),
     MAIN_PAGE("/feed", new MainPageCommand()),
     EDIT_POST("/edit", new EditPostsCommand()),
