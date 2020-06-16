@@ -61,6 +61,7 @@ public class UserRepositoryImpl implements UserRepository {
             preparedStatement.setDate(7, new Date(user.getCreated().getTime()));
             preparedStatement.setDate(8, new Date(user.getCreated().getTime()));
             preparedStatement.executeUpdate();
+            user = findByUsername(user.getUserName());
             return user;
         } catch (SQLException e) {
             throw new UserRepositoryException(

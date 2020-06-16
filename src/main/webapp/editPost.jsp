@@ -2,6 +2,7 @@
 <html>
 <%@ include file="include/head.htm" %>
 <body>
+<%@ include file="include/menu.htm" %>
 <div class="container">
         <div class="row">
             <div class=col-md-1>ID</div>

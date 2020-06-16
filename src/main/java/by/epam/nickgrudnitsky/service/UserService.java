@@ -15,4 +15,6 @@ public interface UserService {
     User findById(Integer id) throws UserServiceException;
 
     User deleteById(Integer id) throws UserServiceException;
+
+    boolean checkIfAdmin(User user) throws UserServiceException;
 }

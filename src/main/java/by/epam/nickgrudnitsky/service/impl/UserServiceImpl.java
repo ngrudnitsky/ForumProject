@@ -26,11 +26,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User register(User user) throws UserServiceException {
-        if (user == null) {
-            String errorMessage = "IN UserServiceImpl.register - user is null";
-            log.error(errorMessage);
-            throw new UserServiceException(errorMessage);
-        }
+        checkIfValueIsNull(user, "IN UserServiceImpl.register - user is null");
         Role roleUser;
         try {
             roleUser = roleRepository.findByName("USER");
@@ -48,8 +44,13 @@ public class UserServiceImpl implements UserService {
         User registeredUser;
         try {
             registeredUser = userRepository.save(user);
+            roleRepository.setUserRole(registeredUser);
         } catch (UserRepositoryException e) {
             String errorMessage = "IN UserServiceImpl.register - failed to register user";
+            log.error(errorMessage);
+            throw new UserServiceException(errorMessage, e);
+        } catch (RoleRepositoryException e) {
+            String errorMessage = "IN UserServiceImpl.register - failed to set user's role";
             log.error(errorMessage);
             throw new UserServiceException(errorMessage, e);
         }
@@ -74,11 +75,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findByUsername(String username) throws UserServiceException {
         User result;
-        if (username == null) {
-            String errorMessage = "IN UserServiceImpl.findByUsername - Null userName was found";
-            log.error(errorMessage);
-            throw new UserServiceException(errorMessage);
-        }
+        checkIfValueIsNull(username, "IN UserServiceImpl.findByUsername - Null userName was found");
         try {
             result = userRepository.findByUsername(username);
         } catch (UserRepositoryException e) {
@@ -94,11 +91,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findById(Integer id) throws UserServiceException {
         User result;
-        if (id == null) {
-            String errorMessage = "IN UserServiceImpl.findById - Null id was found";
-            log.error(errorMessage);
-            throw new UserServiceException(errorMessage);
-        }
+        checkIfValueIsNull(id, "IN UserServiceImpl.findById - Null id was found");
         try {
             result = userRepository.findById(id);
         } catch (UserRepositoryException e) {
@@ -112,11 +105,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User deleteById(Integer id) throws UserServiceException {
-        if (id == null) {
-            String errorMessage = "IN UserServiceImpl.delete - Null id was found";
-            log.error(errorMessage);
-            throw new UserServiceException(errorMessage);
-        }
+        checkIfValueIsNull(id, "IN UserServiceImpl.delete - Null id was found");
         User user;
         try {
             user = userRepository.findById(id);
@@ -136,5 +125,26 @@ public class UserServiceImpl implements UserService {
         }
         log.info("IN UserServiceImpl.delete - user with id: {} successfully deleted", id);
         return user;
+    }
+
+    @Override
+    public boolean checkIfAdmin(User user) throws UserServiceException {
+        checkIfValueIsNull(user, "IN UserServiceImpl.delete - Null id was found");
+        try {
+            List<String> userRoles = roleRepository.findUserRoles(user);
+            return userRoles.stream().anyMatch(e -> e.equals("2"));
+        } catch (RoleRepositoryException e) {
+            String errorMessage =
+                    String.format("IN UserServiceImpl.checkIfAdmin - Failed to check if user %S is admin.", user);
+            log.error(errorMessage);
+            throw new UserServiceException(errorMessage, e);
+        }
+    }
+
+    private void checkIfValueIsNull(Object value, String errorMessage) throws UserServiceException {
+        if (value == null) {
+            log.error(errorMessage);
+            throw new UserServiceException(errorMessage);
+        }
     }
 }

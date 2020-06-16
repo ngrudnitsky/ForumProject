@@ -2,6 +2,7 @@
 <html>
 <%@ include file="include/head.htm" %>
 <body>
+<%@ include file="include/menu.htm" %>
 <p> ${user} profile!</p>
 <p> name - ${user.firstName}</p>
 <p> last name - ${user.lastName}</p>
@@ -10,9 +11,6 @@
 <!-- Button -->
 <div class="form-group">
   <label class="col-md-4 control-label" for="singlebutton"></label>
-  <div class="col-md-4">
-    <button id="logout" name="logout" value="true" class="btn btn-success">Log Out</button>
- </div>
 </div>
 <!-- Button -->
 <div class="form-group">
@@ -24,9 +22,7 @@
 <!-- Button -->
 <div class="form-group">
   <label class="col-md-4 control-label" for="singlebutton"></label>
-  <div class="col-md-4">
-    <button id="edit posts" name="edit posts" value="true" class="btn btn-success">Edit Posts</button>
- </div>
+
 </div>
 </form>
 </body>

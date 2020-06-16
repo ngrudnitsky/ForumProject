@@ -2,6 +2,7 @@
 <html>
 <%@ include file="/include/head.htm" %>
 <body>
+<%@ include file="include/menu.htm" %>
 <form class="form-horizontal" action="do?command=Log_In" method="POST">
 <fieldset>
 
@@ -12,7 +13,7 @@
 <div class="form-group">
   <label class="col-md-4 control-label" for="username">Username</label>
   <div class="col-md-4">
-  <input id="username" name="username" value="testUserName" type="text" placeholder="" class="form-control input-md" required="">
+  <input id="username" name="username" value="NickGS" type="text" placeholder="" class="form-control input-md" required="">
 
   </div>
 </div>

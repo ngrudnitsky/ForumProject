@@ -27,11 +27,15 @@ public class LogInCommand implements Command {
                 String password = getRequestParameter(req, "password", PASSWORD_PATTERN);
 
                 User user = userService.findByUsername(userName);
-
                 if (user.getPassword().equals(password)) {
                     setSessionAttribute(req, "user", user);
                     setCookie(resp, "password", user.getPassword());
                     setCookie(resp, "userName", user.getUserName());
+                    if (userService.checkIfAdmin(user)) {
+                        setSessionAttribute(req, "admin", "true");
+                    } else {
+                        setSessionAttribute(req, "admin", "false");
+                    }
                     return Action.PROFILE;
                 }
             }
