@@ -6,27 +6,24 @@ import by.epam.nickgrudnitsky.entity.Status;
 import by.epam.nickgrudnitsky.exception.PostRepositoryException;
 import by.epam.nickgrudnitsky.util.JdbcConnection;
 import org.apache.commons.lang3.EnumUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PostRepositoryImpl implements PostRepository {
-    private static final String FIND_BY_ID_QUERY = "SELECT * FROM posts WHERE id = '%s'";
-    private static final String SAVE_POST_QUERY = "INSERT INTO posts(title, content, status," +
-            "createdAt, updatedAt, users_id)VALUES(?,?,?,?,?,?)";
-    private static final String FIND_ALL_POSTS_QUERY = "SELECT id FROM posts";
-    private static final String UPDATE_POST_QUERY = "UPDATE posts SET title = ?, content = ?, status = ?, " +
-            "updatedAt= ? WHERE id = ?";
-
+    private final Logger log = LoggerFactory.getLogger(PostRepositoryImpl.class);
     private final Connection connection = JdbcConnection.getConnection();
 
     @Override
     public Post findById(Integer id) throws PostRepositoryException {
-        String errorMessage = "IN PostRepositoryImpl failed to find post id %d";
+        String findByIdQuery = String.format("SELECT * FROM posts WHERE id = '%s'", id);
+        String errorMessage = String.format("IN PostRepositoryImpl.findById failed to find post by id %d", id);
         try {
+            ResultSet resultSet = connection.createStatement().executeQuery(findByIdQuery);
             Post post = new Post();
-            ResultSet resultSet = connection.createStatement().executeQuery(String.format(FIND_BY_ID_QUERY, id));
             if (resultSet.next()) {
                 post.setId(id);
                 post.setTitle(resultSet.getString("title"));
@@ -38,17 +35,19 @@ public class PostRepositoryImpl implements PostRepository {
                 return post;
             }
         } catch (SQLException e) {
-            throw new PostRepositoryException(
-                    String.format(errorMessage, id), e);
+            log.error(errorMessage);
+            throw new PostRepositoryException(errorMessage, e);
         }
-        throw new PostRepositoryException(
-                String.format(errorMessage, id));
+        log.error(errorMessage);
+        throw new PostRepositoryException(errorMessage);
     }
 
     @Override
     public Post update(Post post) throws PostRepositoryException {
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_POST_QUERY);
+            String updatePostQuery = "UPDATE posts SET title = ?, content = ?, status = ?, " +
+                    "updatedAt= ? WHERE id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(updatePostQuery);
             preparedStatement.setString(1, post.getTitle());
             preparedStatement.setString(2, post.getContent());
             preparedStatement.setString(3, post.getStatus().name());
@@ -57,15 +56,19 @@ public class PostRepositoryImpl implements PostRepository {
             preparedStatement.executeUpdate();
             return post;
         } catch (SQLException e) {
-            throw new PostRepositoryException(
-                    String.format("IN PostRepositoryImpl failed to update post %s", post), e);
+            String errorMessage = String.format(
+                    "IN PostRepositoryImpl.update failed to update post with id %d", post.getId());
+            log.error(errorMessage);
+            throw new PostRepositoryException(errorMessage, e);
         }
     }
 
     @Override
     public Post create(Post post) throws PostRepositoryException {
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(SAVE_POST_QUERY);
+            String createPostQuery = "INSERT INTO posts(title, content, status," +
+                    "createdAt, updatedAt, users_id)VALUES(?,?,?,?,?,?)";
+            PreparedStatement preparedStatement = connection.prepareStatement(createPostQuery);
             preparedStatement.setString(1, post.getTitle());
             preparedStatement.setString(2, post.getContent());
             preparedStatement.setString(3, post.getStatus().name());
@@ -75,22 +78,28 @@ public class PostRepositoryImpl implements PostRepository {
             preparedStatement.executeUpdate();
             return post;
         } catch (SQLException e) {
-            throw new PostRepositoryException(
-                    String.format("IN PostRepositoryImpl failed to save post %s", post), e);
+            String errorMessage = String.format(
+                    "IN PostRepositoryImpl.create failed to create new post %s", post.getTitle());
+            log.error(errorMessage);
+            throw new PostRepositoryException(errorMessage, e);
         }
     }
 
+    //todo findFromTo
     @Override
     public List<Post> findAll() throws PostRepositoryException {
         try {
-            List<Post> users = new ArrayList<>();
-            ResultSet resultSet = connection.createStatement().executeQuery(FIND_ALL_POSTS_QUERY);
+            String findAllPostsQuery = "SELECT id FROM posts";
+            List<Post> posts = new ArrayList<>();
+            ResultSet resultSet = connection.createStatement().executeQuery(findAllPostsQuery);
             while (resultSet.next()) {
-                users.add(findById(resultSet.getInt(1)));
+                posts.add(findById(resultSet.getInt(1)));
             }
-            return users;
+            return posts;
         } catch (SQLException e) {
-            throw new PostRepositoryException("IN PostRepositoryImpl failed to find all posts.", e);
+            String errorMessage = "IN PostRepositoryImpl.findAll failed to find all posts";
+            log.error(errorMessage);
+            throw new PostRepositoryException(errorMessage, e);
         }
     }
 }

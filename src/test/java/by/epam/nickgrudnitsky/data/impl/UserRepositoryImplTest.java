@@ -4,9 +4,12 @@ import by.epam.nickgrudnitsky.entity.Status;
 import by.epam.nickgrudnitsky.entity.User;
 import by.epam.nickgrudnitsky.exception.UserRepositoryException;
 
+import by.epam.nickgrudnitsky.util.JdbcConnection;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
@@ -46,7 +49,7 @@ class UserRepositoryImplTest {
 
     @Test
     void save() throws UserRepositoryException {
-        User savesUser = userRepository.save(user);
+        User savesUser = userRepository.create(user);
         assertNotNull(savesUser);
     }
 
@@ -73,5 +76,10 @@ class UserRepositoryImplTest {
     void findByIdWithWrongId() {
         assertThrows(UserRepositoryException.class, () ->
                 userRepository.findById(Integer.MAX_VALUE));
+    }
+
+    @AfterAll
+    static void resetDataBase() throws SQLException {
+        JdbcConnection.reset();
     }
 }

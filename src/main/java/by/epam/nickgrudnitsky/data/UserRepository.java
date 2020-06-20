@@ -8,7 +8,7 @@ import java.util.List;
 public interface UserRepository {
     User findByUsername(String name) throws UserRepositoryException;
 
-    User save(User user) throws UserRepositoryException;
+    User create(User user) throws UserRepositoryException;
 
     User update(User user) throws UserRepositoryException;
 

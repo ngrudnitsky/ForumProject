@@ -3,9 +3,12 @@ package by.epam.nickgrudnitsky.data.impl;
 import by.epam.nickgrudnitsky.entity.Post;
 import by.epam.nickgrudnitsky.entity.Status;
 import by.epam.nickgrudnitsky.exception.PostRepositoryException;
+import by.epam.nickgrudnitsky.util.JdbcConnection;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
@@ -57,5 +60,10 @@ class PostRepositoryImplTest {
     void findAll() throws PostRepositoryException {
         List<Post> posts = postRepository.findAll();
         assertNotNull(posts);
+    }
+
+    @AfterAll
+    static void resetDataBase() throws SQLException {
+        JdbcConnection.reset();
     }
 }

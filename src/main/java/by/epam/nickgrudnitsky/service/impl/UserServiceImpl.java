@@ -43,8 +43,8 @@ public class UserServiceImpl implements UserService {
         user.setUpdated(new Date());
         User registeredUser;
         try {
-            registeredUser = userRepository.save(user);
-            roleRepository.setUserRole(registeredUser);
+            registeredUser = userRepository.create(user);
+            roleRepository.setRoleUser(registeredUser.getId());
         } catch (UserRepositoryException e) {
             String errorMessage = "IN UserServiceImpl.register - failed to register user";
             log.error(errorMessage);
@@ -131,7 +131,7 @@ public class UserServiceImpl implements UserService {
     public boolean checkIfAdmin(User user) throws UserServiceException {
         checkIfValueIsNull(user, "IN UserServiceImpl.delete - Null id was found");
         try {
-            List<String> userRoles = roleRepository.findUserRoles(user);
+            List<String> userRoles = roleRepository.findAllUserRoles(user.getId());
             return userRoles.stream().anyMatch(e -> e.equals("2"));
         } catch (RoleRepositoryException e) {
             String errorMessage =

@@ -1,6 +1,5 @@
 package by.epam.nickgrudnitsky.data.impl;
 
-import by.epam.nickgrudnitsky.entity.User;
 import by.epam.nickgrudnitsky.util.JdbcConnection;
 import by.epam.nickgrudnitsky.data.RoleRepository;
 import by.epam.nickgrudnitsky.entity.Role;
@@ -8,24 +7,24 @@ import by.epam.nickgrudnitsky.entity.Status;
 import by.epam.nickgrudnitsky.exception.RoleRepositoryException;
 
 import org.apache.commons.lang3.EnumUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class RoleRepositoryImpl implements RoleRepository {
-    private static final String FIND_BY_NAME_QUERY = "SELECT * FROM roles WHERE name = '%s'";
-    private static final String FIND_ALL_USER_ROLES_QUERY = "SELECT roles_id FROM users_has_roles WHERE users_id = ?";
-    private static final String SAVE_USER_ROLE_QUERY = "INSERT INTO users_has_roles(users_id, roles_id)VALUES(?,?)";
-
-    private Connection connection = JdbcConnection.getConnection();
+    private final Logger log = LoggerFactory.getLogger(RoleRepositoryImpl.class);
+    private final Connection connection = JdbcConnection.getConnection();
 
     @Override
     public Role findByName(String roleName) throws RoleRepositoryException {
-        String ERROR_MESSAGE = "IN RoleRepositoryImpl failed to find role by name %s";
+        String findByNameQuery = String.format("SELECT * FROM roles WHERE name = '%s'", roleName);
+        String errorMessage = "IN RoleRepositoryImpl.findByName failed to find role by name %s";
+        Role role = new Role();
         try {
-            Role role = new Role();
-            ResultSet resultSet = connection.createStatement().executeQuery(String.format(FIND_BY_NAME_QUERY, roleName));
+            ResultSet resultSet = connection.createStatement().executeQuery(findByNameQuery);
             if (resultSet.next()) {
                 role.setId(resultSet.getInt("id"));
                 role.setName(roleName);
@@ -35,40 +34,48 @@ public class RoleRepositoryImpl implements RoleRepository {
                 return role;
             }
         } catch (SQLException e) {
-            throw new RoleRepositoryException(
-                    String.format(ERROR_MESSAGE, roleName), e);
+            log.error(errorMessage);
+            throw new RoleRepositoryException(errorMessage, e);
         }
-        throw new RoleRepositoryException(
-                String.format(ERROR_MESSAGE, roleName));
+        log.error(errorMessage);
+        throw new RoleRepositoryException(errorMessage);
     }
 
+    //todo List<Integer>
     @Override
-    public List<String> findUserRoles(User user) throws RoleRepositoryException {
+    public List<String> findAllUserRoles(Integer userId) throws RoleRepositoryException {
+        String errorMessage = String.format(
+                "IN RoleRepositoryImpl.findAllUserRoles failed to find all roles of %s user.", userId);
         try {
+            String findAllUserRolesQuery = String.format(
+                    "SELECT roles_id FROM users_has_roles WHERE users_id = %s", userId);
             List<String> roles = new ArrayList<>();
-            PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_USER_ROLES_QUERY);
-            preparedStatement.setInt(1, user.getId());
-            ResultSet resultSet = preparedStatement.executeQuery();
+            ResultSet resultSet = connection.createStatement().executeQuery(findAllUserRolesQuery);
             while (resultSet.next()) {
                 roles.add(resultSet.getString(1));
             }
+            if (roles.isEmpty()){
+                log.error(errorMessage);
+                throw new RoleRepositoryException(errorMessage);
+            }
             return roles;
         } catch (SQLException e) {
-            throw new RoleRepositoryException("IN RoleRepositoryImpl failed to find all user's roles.", e);
+            log.error(errorMessage);
+            throw new RoleRepositoryException(errorMessage, e);
         }
     }
 
     @Override
-    public User setUserRole(User user) throws RoleRepositoryException {
+    public void setRoleUser(Integer userId) throws RoleRepositoryException {
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(SAVE_USER_ROLE_QUERY);
-            preparedStatement.setInt(1, user.getId());
-            preparedStatement.setInt(2, 1);
-            preparedStatement.executeUpdate();
-            return user;
+            String saveUserRoleQuery = String.format(
+                    "INSERT INTO users_has_roles(users_id, roles_id)VALUES(%s,1)", userId);
+            connection.createStatement().executeUpdate(saveUserRoleQuery);
         } catch (SQLException e) {
-            throw new RoleRepositoryException(
-                    String.format("IN RoleRepositoryImpl failed to save user's %s role USER", user), e);
+            String errorMessage = String.format(
+                    "IN RoleRepositoryImpl.setRoleUser failed to save user's USER with id %s", userId);
+            log.error(errorMessage);
+            throw new RoleRepositoryException(errorMessage, e);
         }
     }
 }

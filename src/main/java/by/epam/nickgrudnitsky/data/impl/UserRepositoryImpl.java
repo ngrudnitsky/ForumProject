@@ -6,28 +6,26 @@ import by.epam.nickgrudnitsky.entity.Status;
 import by.epam.nickgrudnitsky.entity.User;
 import by.epam.nickgrudnitsky.exception.UserRepositoryException;
 import org.apache.commons.lang3.EnumUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class UserRepositoryImpl implements UserRepository {
-    private static final String FIND_BY_NAME_QUERY = "SELECT * FROM users WHERE userName = '%s'";
-    private static final String SAVE_USER_QUERY = "INSERT INTO users(firstName, LastName, userName," +
-            "email, password, status, createdAt, updatedAt)VALUES(?,?,?,?,?,?,?,?)";
-    private static final String FIND_ALL_USERS_QUERY = "SELECT userName FROM users";
-    private static final String UPDATE_USER_QUERY = "UPDATE users SET firstName = ?, LastName = ?, userName = ?," +
-            "email = ?, password = ?, status = ?, updatedAt = ? WHERE id = ?";
-    private static final String FIND_BY_ID_QUERY = "SELECT * FROM users WHERE id = '%s'";
-
-    private Connection connection = JdbcConnection.getConnection();
+    private final Logger log = LoggerFactory.getLogger(UserRepositoryImpl.class);
+    private final Connection connection = JdbcConnection.getConnection();
 
     @Override
     public User findByUsername(String userName) throws UserRepositoryException {
-        String ERROR_MESSAGE = "IN UserRepositoryImpl failed to find user by userName %s";
+        String errorMessage = String.format(
+                "IN UserRepositoryImpl.findByUsername failed to find user by userName %s", userName);
         try {
+            String findByNameQuery = String.format(
+                    "SELECT * FROM users WHERE userName = '%s'", userName);
             User user = new User();
-            ResultSet resultSet = connection.createStatement().executeQuery(String.format(FIND_BY_NAME_QUERY, userName));
+            ResultSet resultSet = connection.createStatement().executeQuery(findByNameQuery);
             if (resultSet.next()) {
                 user.setId(resultSet.getInt("id"));
                 user.setFirstName(resultSet.getString("firstName"));
@@ -38,20 +36,23 @@ public class UserRepositoryImpl implements UserRepository {
                 user.setCreated(resultSet.getDate("createdAt"));
                 user.setUpdated(resultSet.getDate("updatedAt"));
                 user.setStatus(EnumUtils.getEnum(Status.class, resultSet.getString("status")));
+                //todo log.info for all repos
                 return user;
             }
         } catch (SQLException e) {
-            throw new UserRepositoryException(
-                    String.format(ERROR_MESSAGE, userName), e);
+            log.error(errorMessage);
+            throw new UserRepositoryException(errorMessage, e);
         }
-        throw new UserRepositoryException(
-                String.format(ERROR_MESSAGE, userName));
+        log.error(errorMessage);
+        throw new UserRepositoryException(errorMessage);
     }
 
     @Override
-    public User save(User user) throws UserRepositoryException {
+    public User create(User user) throws UserRepositoryException {
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(SAVE_USER_QUERY);
+            String saveUserQuery = "INSERT INTO users(firstName, LastName, userName," +
+                    "email, password, status, createdAt, updatedAt)VALUES(?,?,?,?,?,?,?,?)";
+            PreparedStatement preparedStatement = connection.prepareStatement(saveUserQuery);
             preparedStatement.setString(1, user.getFirstName());
             preparedStatement.setString(2, user.getLastName());
             preparedStatement.setString(3, user.getUserName());
@@ -61,32 +62,41 @@ public class UserRepositoryImpl implements UserRepository {
             preparedStatement.setDate(7, new Date(user.getCreated().getTime()));
             preparedStatement.setDate(8, new Date(user.getCreated().getTime()));
             preparedStatement.executeUpdate();
+            //todo findUsersId
             user = findByUsername(user.getUserName());
             return user;
         } catch (SQLException e) {
-            throw new UserRepositoryException(
-                    String.format("IN UserRepositoryImpl failed to save user %s", user), e);
+            String errorMessage = String.format(
+                    "IN UserRepositoryImpl.create failed to create new user %s", user.getUserName());
+            log.error(errorMessage);
+            throw new UserRepositoryException(errorMessage, e);
         }
     }
 
+    //todo findFromTo
     @Override
     public List<User> findAll() throws UserRepositoryException {
         try {
+            String findAllUsersQuery = "SELECT userName FROM users";
             List<User> users = new ArrayList<>();
-            ResultSet resultSet = connection.createStatement().executeQuery(FIND_ALL_USERS_QUERY);
+            ResultSet resultSet = connection.createStatement().executeQuery(findAllUsersQuery);
             while (resultSet.next()) {
                 users.add(findByUsername(resultSet.getString(1)));
             }
             return users;
         } catch (SQLException e) {
-            throw new UserRepositoryException("IN UserRepositoryImpl failed to find all users.", e);
+            String errorMessage = "IN UserRepositoryImpl.findAll failed to find all users.";
+            log.error(errorMessage);
+            throw new UserRepositoryException(errorMessage, e);
         }
     }
 
     @Override
     public User update(User user) throws UserRepositoryException {
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER_QUERY);
+            String updateUserQuery = "UPDATE users SET firstName = ?, LastName = ?, userName = ?," +
+                    "email = ?, password = ?, status = ?, updatedAt = ? WHERE id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(updateUserQuery);
             preparedStatement.setString(1, user.getFirstName());
             preparedStatement.setString(2, user.getLastName());
             preparedStatement.setString(3, user.getUserName());
@@ -98,18 +108,21 @@ public class UserRepositoryImpl implements UserRepository {
             preparedStatement.executeUpdate();
             return user;
         } catch (SQLException e) {
-            throw new UserRepositoryException(
-                    String.format("IN UserRepositoryImpl failed to update user %s", user), e);
+            String errorMessage = String.format(
+                    "IN UserRepositoryImpl.update failed to update user %s", user.getUserName());
+            log.error(errorMessage);
+            throw new UserRepositoryException(errorMessage, e);
         }
     }
 
     @Override
     public User findById(Integer id) throws UserRepositoryException {
-        String ERROR_MESSAGE = "IN UserRepositoryImpl failed ti find user by id %d";
+        String errorMessage = String.format("IN UserRepositoryImpl.findById failed to find user by id %s", id);
         try {
-            User user = new User();
-            ResultSet resultSet = connection.createStatement().executeQuery(String.format(FIND_BY_ID_QUERY, id));
+            String findByIdQuery = String.format("SELECT * FROM users WHERE id = '%s'", id);
+            ResultSet resultSet = connection.createStatement().executeQuery(findByIdQuery);
             if (resultSet.next()) {
+                User user = new User();
                 user.setId(id);
                 user.setFirstName(resultSet.getString("firstName"));
                 user.setLastName(resultSet.getString("lastName"));
@@ -122,10 +135,10 @@ public class UserRepositoryImpl implements UserRepository {
                 return user;
             }
         } catch (SQLException e) {
-            throw new UserRepositoryException(
-                    String.format(ERROR_MESSAGE, id), e);
+            log.error(errorMessage);
+            throw new UserRepositoryException(errorMessage, e);
         }
-        throw new UserRepositoryException(
-                String.format(ERROR_MESSAGE, id));
+        log.error(errorMessage);
+        throw new UserRepositoryException(errorMessage);
     }
 }
