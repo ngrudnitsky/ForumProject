@@ -10,6 +10,8 @@ public interface PostRepository {
 
     Post update(Post post) throws PostRepositoryException;
 
+    Post deleteById(Integer id) throws PostRepositoryException;
+
     Post create(Post post) throws PostRepositoryException;
 
     List<Post> findAll() throws PostRepositoryException;

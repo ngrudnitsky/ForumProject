@@ -116,6 +116,24 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public User deleteById(Integer id) throws UserRepositoryException {
+        try {
+            String updateUserQuery = "UPDATE users SET status = ?, updatedAt = ? WHERE id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(updateUserQuery);
+            preparedStatement.setString(1, Status.DELETED.name());
+            preparedStatement.setDate(2, new Date(System.currentTimeMillis()));
+            preparedStatement.setInt(3, id);
+            preparedStatement.executeUpdate();
+            return findById(id);
+        } catch (SQLException e) {
+            String errorMessage = String.format(
+                    "IN UserRepositoryImpl.deleteById failed to delete user with id %s", id);
+            log.error(errorMessage);
+            throw new UserRepositoryException(errorMessage, e);
+        }
+    }
+
+    @Override
     public User findById(Integer id) throws UserRepositoryException {
         String errorMessage = String.format("IN UserRepositoryImpl.findById failed to find user by id %s", id);
         try {

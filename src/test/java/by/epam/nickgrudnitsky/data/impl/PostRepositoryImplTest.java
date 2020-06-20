@@ -2,7 +2,9 @@ package by.epam.nickgrudnitsky.data.impl;
 
 import by.epam.nickgrudnitsky.entity.Post;
 import by.epam.nickgrudnitsky.entity.Status;
+import by.epam.nickgrudnitsky.entity.User;
 import by.epam.nickgrudnitsky.exception.PostRepositoryException;
+import by.epam.nickgrudnitsky.exception.UserRepositoryException;
 import by.epam.nickgrudnitsky.util.JdbcConnection;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -60,6 +62,19 @@ class PostRepositoryImplTest {
     void findAll() throws PostRepositoryException {
         List<Post> posts = postRepository.findAll();
         assertNotNull(posts);
+    }
+
+    @Test
+    void deleteUserById() throws  PostRepositoryException {
+        int id = 1;
+        Post post = postRepository.deleteById(id);
+        assertEquals(Status.DELETED, post.getStatus());
+    }
+
+    @Test
+    void deleteUserByIdWithWrongId() {
+        assertThrows(PostRepositoryException.class, () ->
+                postRepository.deleteById(Integer.MAX_VALUE));
     }
 
     @AfterAll

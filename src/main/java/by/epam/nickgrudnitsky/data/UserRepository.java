@@ -12,6 +12,8 @@ public interface UserRepository {
 
     User update(User user) throws UserRepositoryException;
 
+    User deleteById(Integer id) throws UserRepositoryException;
+
     List<User> findAll() throws UserRepositoryException;
 
     User findById(Integer id) throws UserRepositoryException;

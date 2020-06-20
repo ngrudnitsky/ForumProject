@@ -18,98 +18,85 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Post create(Post post) throws PostServiceException {
-        if (post == null) {
-            String errorMessage = "IN PostServiceImpl.create  - user is null";
-            log.error(errorMessage);
-            throw new PostServiceException(errorMessage);
-        }
-        post.setStatus(Status.ACTIVE);
-        post.setCreated(new Date());
-        post.setUpdated(new Date());
-        Post createdPost;
+        checkIfValueIsNull(post, "IN PostServiceImpl.create  - post is null");
         try {
-            createdPost = postRepository.create(post);
+            post.setStatus(Status.ACTIVE);
+            post.setCreated(new Date());
+            post.setUpdated(new Date());
+            post = postRepository.create(post);
+            log.info("IN PostServiceImpl.create - post: #{} is successfully created", post.getId());
+            return post;
         } catch (PostRepositoryException e) {
-            String errorMessage = String.format("IN PostServiceImpl - failed to create post %s", post);
+            String errorMessage = String.format(
+                    "IN PostServiceImpl.create - failed to create post #%s", post.getId());
             log.error(errorMessage);
             throw new PostServiceException(errorMessage, e);
         }
-        log.info("IN PostServiceImpl.create - post: {} successfully registered", createdPost);
-        return createdPost;
     }
 
     @Override
     public Post updatePost(Post post) throws PostServiceException {
-        if (post == null) {
-            String errorMessage = "IN PostServiceImpl.updatePost  - user is null";
-            log.error(errorMessage);
-            throw new PostServiceException(errorMessage);
-        }
+        checkIfValueIsNull(post, "IN PostServiceImpl.updatePost - post is null");
         try {
-            Post createdPost = postRepository.update(post);
-            log.info("IN PostServiceImpl.create - post: {} successfully registered", createdPost);
-            return createdPost;
+            post = postRepository.update(post);
+            log.info("IN PostServiceImpl.updatePost - post: #{} successfully registered", post.getId());
+            return post;
         } catch (PostRepositoryException e) {
-            String errorMessage = String.format("IN PostServiceImpl - failed to create post %s", post);
+            String errorMessage = String.format(
+                    "IN PostServiceImpl.updatePost - failed to create post #%s", post.getId());
             log.error(errorMessage);
             throw new PostServiceException(errorMessage, e);
         }
     }
 
+    //TODO findFromTo
     @Override
     public List<Post> findAll() throws PostServiceException {
-        List<Post> result;
         try {
-            result = postRepository.findAll();
+            List<Post> posts = postRepository.findAll();
+            log.info("IN PostServiceImpl.findAll - {} users found", posts.size());
+            return posts;
         } catch (PostRepositoryException e) {
-            String errorMessage = "IN PostServiceImpl - failed to get all users";
+            String errorMessage = "IN PostServiceImpl.findAll - failed to get all users";
             log.error(errorMessage);
             throw new PostServiceException(errorMessage, e);
         }
-        log.info("IN PostServiceImpl.findAll - {} users found", result.size());
-        return result;
     }
 
     @Override
     public Post findById(Integer id) throws PostServiceException {
-        Post result;
-        if (id == null) {
-            throw new PostServiceException("IN PostServiceImpl.findById Null id was found");
-        }
+        checkIfValueIsNull(id, "IN PostServiceImpl.findById - id is Null");
         try {
-            result = postRepository.findById(id);
+            Post post = postRepository.findById(id);
+            log.info("IN PostServiceImpl.findById - post: found by id: #{}", id);
+            return post;
         } catch (PostRepositoryException e) {
-            String errorMessage = String.format("Failed to find user by id %s", id);
+            String errorMessage = String.format(
+                    "IN PostServiceImpl.findById Failed to find user by id %s", id);
             log.error(errorMessage);
             throw new PostServiceException(errorMessage, e);
         }
-        log.info("IN PostServiceImpl.findById - user: {} found by id: {}", result, id);
-        return result;
     }
 
     @Override
     public Post deleteById(Integer id) throws PostServiceException {
-        if (id == null) {
-            throw new PostServiceException("IN PostServiceImpl.delete Null id was found");
-        }
-        Post post;
+        checkIfValueIsNull(id, "IN PostServiceImpl.deleteById - id is Null");
         try {
-            post = postRepository.findById(id);
+            Post post = postRepository.deleteById(id);
+            log.info("IN PostServiceImpl.deleteById - post with id: {} successfully deleted", id);
+            return post;
         } catch (PostRepositoryException e) {
-            String errorMessage = String.format("Failed to delete user by id %s", id);
+            String errorMessage = String.format(
+                    "IN PostServiceImpl.deleteById - Failed to delete post by id %s", id);
             log.error(errorMessage);
             throw new PostServiceException(errorMessage, e);
         }
-        post.setStatus(Status.DELETED);
-        post.setUpdated(new Date());
-        try {
-            postRepository.update(post);
-        } catch (PostRepositoryException e) {
-            String errorMessage = String.format("Failed to delete user by id %s", id);
+    }
+
+    private void checkIfValueIsNull(Object value, String errorMessage) throws PostServiceException {
+        if (value == null) {
             log.error(errorMessage);
-            throw new PostServiceException(errorMessage, e);
+            throw new PostServiceException(errorMessage);
         }
-        log.info("IN PostServiceImpl.delete - user with id: {} successfully deleted", id);
-        return post;
     }
 }

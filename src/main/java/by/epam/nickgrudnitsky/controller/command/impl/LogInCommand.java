@@ -31,7 +31,8 @@ public class LogInCommand implements Command {
                 if (user.getPassword().equals(password)) {
                     HttpSession userSession = setSessionAttribute(req, "user", user);
                     userSession.setMaxInactiveInterval(600);
-                    HttpSession adminSession = setSessionAttribute(req, "admin", userService.checkIfAdmin(user) ? "true" : "false");
+                    HttpSession adminSession = setSessionAttribute(req, "admin",
+                            userService.checkIfAdmin(user.getId()) ? "true" : "false");
                     adminSession.setMaxInactiveInterval(600);
                     return Action.PROFILE;
                 }

@@ -100,6 +100,17 @@ class UserServiceImplTest {
                 userService.deleteById(-1));
     }
 
+    @Test
+    void checkIfAdmin() throws UserServiceException {
+        assertTrue(userService.checkIfAdmin(1));
+    }
+
+    @Test
+    void checkIfAdminWithNullUser() {
+        assertThrows(UserServiceException.class, () ->
+                userService.checkIfAdmin(null));
+    }
+
     @AfterAll
     static void resetDataBase() throws SQLException {
         JdbcConnection.reset();

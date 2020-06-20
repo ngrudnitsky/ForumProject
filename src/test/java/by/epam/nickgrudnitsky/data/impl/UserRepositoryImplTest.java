@@ -78,6 +78,19 @@ class UserRepositoryImplTest {
                 userRepository.findById(Integer.MAX_VALUE));
     }
 
+    @Test
+    void deleteUserById() throws UserRepositoryException {
+        int id = 1;
+        User user = userRepository.deleteById(id);
+        assertEquals(Status.DELETED, user.getStatus());
+    }
+
+    @Test
+    void deleteUserByIdWithWrongId() {
+        assertThrows(UserRepositoryException.class, () ->
+                userRepository.deleteById(Integer.MAX_VALUE));
+    }
+
     @AfterAll
     static void resetDataBase() throws SQLException {
         JdbcConnection.reset();

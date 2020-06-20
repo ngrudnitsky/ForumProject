@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -21,9 +22,13 @@ class PostServiceImplTest {
     void initialize() {
         postService = new PostServiceImpl();
         post = new Post();
+        post.setId(1);
         post.setTitle("test title");
         post.setContent("test content");
         post.setUserId(1);
+        post.setStatus(Status.ACTIVE);
+        post.setCreated(new Date());
+        post.setUpdated(new Date());
     }
 
     @Test
@@ -78,6 +83,21 @@ class PostServiceImplTest {
     void deleteByIdWithWrongId() {
         assertThrows(PostServiceException.class, () ->
                 postService.deleteById(-1));
+    }
+
+    @Test
+    void updatePost() throws PostServiceException {
+        String updatedTitle = "Updated Title";
+        post.setTitle(updatedTitle);
+        Post updatePost = postService.updatePost(post);
+        assertEquals(updatedTitle, updatePost.getTitle());
+
+    }
+
+    @Test
+    void updatePostWithNullId() {
+        assertThrows(PostServiceException.class, () ->
+                postService.updatePost(null));
     }
 
     @AfterAll

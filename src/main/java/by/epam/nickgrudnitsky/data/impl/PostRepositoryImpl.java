@@ -64,6 +64,24 @@ public class PostRepositoryImpl implements PostRepository {
     }
 
     @Override
+    public Post deleteById(Integer id) throws PostRepositoryException {
+        try {
+            String updateUserQuery = "UPDATE posts SET status = ?, updatedAt = ? WHERE id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(updateUserQuery);
+            preparedStatement.setString(1, Status.DELETED.name());
+            preparedStatement.setDate(2, new Date(System.currentTimeMillis()));
+            preparedStatement.setInt(3, id);
+            preparedStatement.executeUpdate();
+            return findById(id);
+        } catch (SQLException e) {
+            String errorMessage = String.format(
+                    "IN PostRepositoryImpl.deleteById failed to delete post with id %s", id);
+            log.error(errorMessage);
+            throw new PostRepositoryException(errorMessage, e);
+        }
+    }
+
+    @Override
     public Post create(Post post) throws PostRepositoryException {
         try {
             String createPostQuery = "INSERT INTO posts(title, content, status," +

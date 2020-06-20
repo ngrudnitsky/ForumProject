@@ -54,7 +54,7 @@ public class RoleRepositoryImpl implements RoleRepository {
             while (resultSet.next()) {
                 roles.add(resultSet.getString(1));
             }
-            if (roles.isEmpty()){
+            if (roles.isEmpty()) {
                 log.error(errorMessage);
                 throw new RoleRepositoryException(errorMessage);
             }
@@ -73,7 +73,7 @@ public class RoleRepositoryImpl implements RoleRepository {
             connection.createStatement().executeUpdate(saveUserRoleQuery);
         } catch (SQLException e) {
             String errorMessage = String.format(
-                    "IN RoleRepositoryImpl.setRoleUser failed to save user's USER with id %s", userId);
+                    "IN RoleRepositoryImpl.setRoleUser failed to set USER role for user with id %s", userId);
             log.error(errorMessage);
             throw new RoleRepositoryException(errorMessage, e);
         }
