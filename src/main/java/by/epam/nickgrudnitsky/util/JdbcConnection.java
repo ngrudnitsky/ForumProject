@@ -63,12 +63,12 @@ public class JdbcConnection {
                     + "ENGINE = InnoDB;");
             statement.executeUpdate("INSERT INTO `mydb`.`roles` (`name`, `status`, `createdAt`, `updatedAt`) VALUES ('USER', 'ACTIVE', '2014-03-16 00:00:00.000', '2014-03-16 00:00:00.000');");
             statement.executeUpdate("INSERT INTO `mydb`.`roles` (`name`, `status`, `createdAt`, `updatedAt`) VALUES ('ADMIN', 'ACTIVE', '2014-03-16 00:00:00.000', '2014-03-16 00:00:00.000');");
-            statement.executeUpdate("INSERT INTO `mydb`.`users` (`firstName`, `lastName`, `userName`, `email`, `password`, `status`, `createdAt`, `updatedAt`) VALUES ('Nikita', 'Grudnitsky', 'NickGS', 'grudnitsky@mail.ru', '123', 'ACTIVE', '2014-03-16 00:00:00.000', '2014-03-16 00:00:00.000');");
+            statement.executeUpdate("INSERT INTO `mydb`.`users` (`firstName`, `lastName`, `userName`, `email`, `password`, `status`, `createdAt`, `updatedAt`) VALUES ('Nikita', 'Grudnitsky', 'NickGS', 'grudnitsky@mail.ru', 'testPassword1', 'ACTIVE', '2014-03-16 00:00:00.000', '2014-03-16 00:00:00.000');");
             statement.executeUpdate("INSERT INTO `mydb`.`users_has_roles` (`users_id`, `roles_id`) VALUES ('1', '1');");
             statement.executeUpdate("INSERT INTO `mydb`.`users_has_roles` (`users_id`, `roles_id`) VALUES ('1', '2');");
-            statement.executeUpdate("INSERT INTO `mydb`.`users` (`firstName`, `lastName`, `userName`, `email`, `password`, `status`, `createdAt`, `updatedAt`) VALUES ('Randy', 'Marsh', 'Stone', 'randyy@mail.ru', '123', 'ACTIVE', '2014-03-16 00:00:00.000', '2014-03-16 00:00:00.000');");
+            statement.executeUpdate("INSERT INTO `mydb`.`users` (`firstName`, `lastName`, `userName`, `email`, `password`, `status`, `createdAt`, `updatedAt`) VALUES ('Randy', 'Marsh', 'Stone', 'randyy@mail.ru', 'testPassword1', 'ACTIVE', '2014-03-16 00:00:00.000', '2014-03-16 00:00:00.000');");
             statement.executeUpdate("INSERT INTO `mydb`.`users_has_roles` (`users_id`, `roles_id`) VALUES ('2', '1');");
-            statement.executeUpdate("INSERT INTO `mydb`.`users` (`firstName`, `lastName`, `userName`, `email`, `password`, `status`, `createdAt`, `updatedAt`) VALUES ('Bob', 'Kelso', 'Doc', 'scrubs@mail.ru', '123', 'ACTIVE', '2014-03-16 00:00:00.000', '2014-03-16 00:00:00.000');");
+            statement.executeUpdate("INSERT INTO `mydb`.`users` (`firstName`, `lastName`, `userName`, `email`, `password`, `status`, `createdAt`, `updatedAt`) VALUES ('Bob', 'Kelso', 'Doc', 'scrubs@mail.ru', 'testPassword1', 'ACTIVE', '2014-03-16 00:00:00.000', '2014-03-16 00:00:00.000');");
             statement.executeUpdate("INSERT INTO `mydb`.`users_has_roles` (`users_id`, `roles_id`) VALUES ('3', '1');");
             statement.executeUpdate("INSERT INTO `mydb`.`posts` (`title`, `content`, `status`, `users_id`, `createdAt`, `updatedAt`) VALUES ('Welcome', 'This is the first post', 'ACTIVE', '1', '2014-03-16 00:00:00.000', '2014-03-16 00:00:00.000');");
             statement.executeUpdate("INSERT INTO `mydb`.`comments` (`content`, `status`, `users_id`, `posts_id`, `createdAt`, `updatedAt`) VALUES ('This is first comment', 'ACTIVE', '1', '1', '2014-03-16 00:00:00.000', '2014-03-16 00:00:00.000');");
@@ -85,5 +85,9 @@ public class JdbcConnection {
             e.printStackTrace();
         }
         return connection;
+    }
+
+    public static void main(String[] args) throws SQLException {
+        JdbcConnection.reset();
     }
 }

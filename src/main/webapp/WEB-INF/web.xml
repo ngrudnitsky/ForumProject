@@ -4,14 +4,6 @@
 
 <web-app>
     <display-name>Archetype Created Web Application</display-name>
-    <servlet>
-        <servlet-name>MainPage</servlet-name>
-        <servlet-class>by.epam.nickgrudnitsky.servlet.MainPageServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>MainPage</servlet-name>
-        <url-pattern>/feed</url-pattern>
-    </servlet-mapping>
 
     <servlet>
         <servlet-name>Controller</servlet-name>
@@ -47,6 +39,15 @@
     <servlet-mapping>
         <servlet-name>writing</servlet-name>
         <url-pattern>/writing</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>feed</servlet-name>
+        <jsp-file>/index.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>feed</servlet-name>
+        <url-pattern>/feed</url-pattern>
     </servlet-mapping>
 
     <servlet>
@@ -94,6 +95,15 @@
         <url-pattern>/profile</url-pattern>
         <url-pattern>/writing</url-pattern>
         <url-pattern>/edit</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>PostFilter</filter-name>
+        <filter-class>by.epam.nickgrudnitsky.filter.PostFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>PostFilter</filter-name>
+        <url-pattern>/feed</url-pattern>
     </filter-mapping>
 
     <filter>

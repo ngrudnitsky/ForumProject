@@ -24,48 +24,49 @@ public class EditPostsCommand implements Command {
     public Action execute(HttpServletRequest req, HttpServletResponse resp) {
         if (isMethodPost(req)) {
             try {
-                final String pattern = "true";
-                PostService postService = new PostServiceImpl();
                 Integer id = Integer.parseInt(getRequestParameter(req, "id"));
-                if (isRequestParameterPresented(req, "update", pattern)) {
+                if (isRequestParameterPresented(req, "update")) {
                     updatePost(req, postService, id);
                 }
-                if (isRequestParameterPresented(req, "delete", pattern)) {
+                if (isRequestParameterPresented(req, "delete")) {
                     deletePost(postService, id);
                 }
-                loadAllPosts(req);
             } catch (ParameterValidationException e) {
                 log.error("IN EditPostsCommand - failed to validate parameter.", e);
-            } catch (PostServiceException e) {
-                log.error("IN EditPostsCommand - failed to register user.");
             }
         }
-        if (isMethodGet(req)) {
-            try {
-                loadAllPosts(req);
-            } catch (PostServiceException e) {
-                e.printStackTrace();
-            }
-        }
+        loadAllPosts(req);
         return Action.EDIT_POST;
     }
 
-    private void deletePost(PostService postService, Integer id) throws PostServiceException {
-        postService.deleteById(id);
+    private void deletePost(PostService postService, Integer id) {
+        try {
+            postService.deleteById(id);
+        } catch (PostServiceException e) {
+            log.error("IN EditPostsCommand - failed to register user.");
+        }
     }
 
-    private void updatePost(HttpServletRequest req, PostService postService, Integer id) throws PostServiceException, ParameterValidationException {
-        Post updatedPost = postService.findById(id);
-        String title = getRequestParameter(req, "title");
-        String content = getRequestParameter(req, "content");
-        updatedPost.setTitle(title);
-        updatedPost.setContent(content);
-        postService.updatePost(updatedPost);
+    private void updatePost(HttpServletRequest req, PostService postService, Integer id) throws ParameterValidationException {
+        try {
+            Post updatedPost = postService.findById(id);
+            String title = getRequestParameter(req, "title");
+            String content = getRequestParameter(req, "content");
+            updatedPost.setTitle(title);
+            updatedPost.setContent(content);
+            postService.updatePost(updatedPost);
+        } catch (PostServiceException e) {
+            log.error("IN EditPostsCommand - failed to update post.");
+        }
     }
 
-    private void loadAllPosts(HttpServletRequest req) throws PostServiceException {
-        List<Post> posts = postService.findAll();
-        HttpSession session = req.getSession();
-        session.setAttribute("posts", posts);
+    private void loadAllPosts(HttpServletRequest req) {
+        try {
+            List<Post> posts = postService.findAll();
+            HttpSession session = req.getSession();
+            session.setAttribute("posts", posts);
+        } catch (PostServiceException e) {
+            log.error("IN EditPostsCommand - failed to load all posts");
+        }
     }
 }

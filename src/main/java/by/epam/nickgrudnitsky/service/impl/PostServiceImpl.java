@@ -54,10 +54,10 @@ public class PostServiceImpl implements PostService {
     public List<Post> findAll() throws PostServiceException {
         try {
             List<Post> posts = postRepository.findAll();
-            log.info("IN PostServiceImpl.findAll - {} users found", posts.size());
+            log.info("IN PostServiceImpl.findAll - {} posts found", posts.size());
             return posts;
         } catch (PostRepositoryException e) {
-            String errorMessage = "IN PostServiceImpl.findAll - failed to get all users";
+            String errorMessage = "IN PostServiceImpl.findAll - failed to get all posts";
             log.error(errorMessage);
             throw new PostServiceException(errorMessage, e);
         }

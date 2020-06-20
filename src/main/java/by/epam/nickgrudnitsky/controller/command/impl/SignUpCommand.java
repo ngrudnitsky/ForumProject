@@ -21,32 +21,32 @@ public class SignUpCommand implements Command {
 
     private final UserService userService = new UserServiceImpl();
 
+    //todo password encoding
     @Override
     public Action execute(HttpServletRequest req, HttpServletResponse resp) {
+        String sessionAttribute = "user";
         try {
             if (isMethodPost(req)) {
                 User user = new User();
-                registerUser(req, user);
-                setSessionAttribute(req, "user", user);
-                setCookie(resp, "password", user.getPassword());
-                setCookie(resp, "userName", user.getUserName());
+                user = registerUser(req, user);
+                setSessionAttribute(req, sessionAttribute, user);
                 return Action.PROFILE;
             }
         } catch (UserServiceException e) {
-            log.error("IN SignUpCommand - failed to register user.");
+            log.error("IN SignUpCommand - failed to register user");
         } catch (ParameterValidationException e) {
-            log.error("IN SignUpCommand - failed to validate parameter.", e);
+            log.error("IN SignUpCommand - failed to validate parameter", e);
         }
-        req.getSession().invalidate();
+        req.getSession().removeAttribute(sessionAttribute);
         return Action.JOIN;
     }
 
-    private void registerUser(HttpServletRequest req, User user) throws ParameterValidationException, UserServiceException {
+    private User registerUser(HttpServletRequest req, User user) throws ParameterValidationException, UserServiceException {
         user.setFirstName(getRequestParameter(req, "firstName", NAME_PATTERN));
         user.setLastName(getRequestParameter(req, "lastName", NAME_PATTERN));
         user.setUserName(getRequestParameter(req, "userName", USER_NAME_PATTERN));
         user.setEmail(getRequestParameter(req, "email", EMAIL_PATTERN));
         user.setPassword(getRequestParameter(req, "password", PASSWORD_PATTERN));
-        userService.register(user);
+        return userService.register(user);
     }
 }

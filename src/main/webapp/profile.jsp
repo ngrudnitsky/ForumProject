@@ -7,7 +7,5 @@
 <p> name - ${user.firstName}</p>
 <p> last name - ${user.lastName}</p>
 <p> email - ${user.email}</p>
-<form class="form-horizontal" action="do?command=profile" method="POST">
-</form>
 </body>
 </html>

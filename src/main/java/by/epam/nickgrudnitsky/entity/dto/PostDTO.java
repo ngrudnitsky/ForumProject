@@ -1,30 +1,27 @@
-package by.epam.nickgrudnitsky.dto;
+package by.epam.nickgrudnitsky.entity.dto;
 
 import by.epam.nickgrudnitsky.entity.Post;
-import by.epam.nickgrudnitsky.entity.Status;
 import by.epam.nickgrudnitsky.entity.User;
 
 import java.sql.Date;
 
-public class MainPagePostDTO {
+public class PostDTO {
     private Integer id;
     private String title;
     private String content;
     private Integer userId;
     private String status;
     private Date created;
-    private Date updated;
     private User user;
 
-    public static MainPagePostDTO fromUser(Post post) {
-        MainPagePostDTO mainPagePostDTO = new MainPagePostDTO();
+    public static PostDTO convertToPostDTO(Post post) {
+        PostDTO mainPagePostDTO = new PostDTO();
         mainPagePostDTO.setId(post.getId());
         mainPagePostDTO.setTitle(post.getTitle());
         mainPagePostDTO.setContent(post.getContent());
         mainPagePostDTO.setUserId(post.getUserId());
         mainPagePostDTO.setStatus(post.getStatus().name());
         mainPagePostDTO.setCreated(new Date(post.getCreated().getTime()));
-        mainPagePostDTO.setUpdated(new Date(post.getUpdated().getTime()));
         return mainPagePostDTO;
     }
 
@@ -82,13 +79,5 @@ public class MainPagePostDTO {
 
     public void setCreated(Date created) {
         this.created = created;
-    }
-
-    public Date getUpdated() {
-        return updated;
-    }
-
-    public void setUpdated(Date updated) {
-        this.updated = updated;
     }
 }

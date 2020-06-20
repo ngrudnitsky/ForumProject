@@ -20,16 +20,17 @@ public class LogInCommand implements Command {
 
     private final UserService userService = new UserServiceImpl();
 
+    //todo password encoding
     @Override
     public Action execute(HttpServletRequest req, HttpServletResponse resp) {
+        String sessionAttribute = "user";
         try {
             if (isMethodPost(req)) {
                 String userName = getRequestParameter(req, "username", USER_NAME_PATTERN);
                 String password = getRequestParameter(req, "password", PASSWORD_PATTERN);
-
                 User user = userService.findByUsername(userName);
                 if (user.getPassword().equals(password)) {
-                    HttpSession userSession = setSessionAttribute(req, "user", user);
+                    HttpSession userSession = setSessionAttribute(req, sessionAttribute, user);
                     userSession.setMaxInactiveInterval(600);
                     HttpSession adminSession = setSessionAttribute(req, "admin",
                             userService.checkIfAdmin(user.getId()) ? "true" : "false");
@@ -42,6 +43,7 @@ public class LogInCommand implements Command {
         } catch (UserServiceException e) {
             log.error(String.format("IN LogInCommand - failed to find user.%n%s", e.getMessage()));
         }
+        req.getSession().removeAttribute(sessionAttribute);
         return Action.LOG_IN;
     }
 }

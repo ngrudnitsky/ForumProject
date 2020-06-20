@@ -3,7 +3,7 @@ package by.epam.nickgrudnitsky.controller.command.impl;
 
 import by.epam.nickgrudnitsky.controller.Action;
 import by.epam.nickgrudnitsky.controller.command.Command;
-import by.epam.nickgrudnitsky.dto.MainPagePostDTO;
+import by.epam.nickgrudnitsky.entity.dto.PostDTO;
 import by.epam.nickgrudnitsky.exception.PostServiceException;
 import by.epam.nickgrudnitsky.exception.UserServiceException;
 import by.epam.nickgrudnitsky.service.PostService;
@@ -25,7 +25,7 @@ public class PostCommand implements Command {
             try {
                 PostService postService = new PostServiceImpl();
                 UserService userService = new UserServiceImpl();
-                MainPagePostDTO post = MainPagePostDTO.fromUser(postService.findById(id));
+                PostDTO post = PostDTO.convertToPostDTO(postService.findById(id));
                 post.setUser(userService.findById(post.getUserId()));
                 setSessionAttribute(req,"post", post);
             } catch (PostServiceException e) {

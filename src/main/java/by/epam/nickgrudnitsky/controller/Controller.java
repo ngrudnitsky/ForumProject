@@ -19,7 +19,7 @@ public class Controller extends HttpServlet {
     }
 
     public void executeCommand(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        Action currentAction = define(req);
+        Action currentAction = defineAction(req);
         Action next = currentAction.getCommand().execute(req, resp);
         if (next == null || next.equals(currentAction)) {
             resp.sendRedirect(req.getContextPath() + currentAction.getJspAddress());
@@ -28,21 +28,12 @@ public class Controller extends HttpServlet {
         }
     }
 
-    private Action define(HttpServletRequest req) {
-        Action result = Action.ERROR;
-        String commandName = req.getParameter("command");
-        if (commandName == null || commandName.isEmpty()) {
-            return result;
+    private Action defineAction(HttpServletRequest req) {
+        String actionName = req.getParameter("command");
+        if (actionName == null || actionName.isEmpty()) {
+                return Action.ERROR;
         }
-        return getCommand(commandName);
-    }
-
-    private Action getCommand(String input) {
-        try {
-            String commandName = input.toUpperCase().replace(" ", "_");
-            return EnumUtils.getEnum(Action.class, commandName);
-        } catch (IllegalArgumentException e) {
-            return Action.ERROR;
-        }
+        actionName = actionName.toUpperCase().replace(" ", "_");
+        return EnumUtils.getEnum(Action.class, actionName);
     }
 }

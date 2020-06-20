@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 
 //Naming?
 public class HttpUtil {
+    private static final String ALL_MATCHES_PATTERN = ".*";
     private HttpUtil() {
     }
 
@@ -24,12 +25,17 @@ public class HttpUtil {
 
     public static String getRequestParameter(HttpServletRequest req, String parameterName)
             throws ParameterValidationException {
-        return getRequestParameter(req, parameterName, ".*");
+        return getRequestParameter(req, parameterName, ALL_MATCHES_PATTERN);
     }
 
     public static boolean isRequestParameterPresented(HttpServletRequest req, String parameterName, String patter) {
         String parameter = req.getParameter(parameterName);
         return parameter != null && parameter.matches(patter);
+    }
+
+    public static boolean isRequestParameterPresented(HttpServletRequest req, String parameterName) {
+        String parameter = req.getParameter(parameterName);
+        return parameter != null && parameter.matches(ALL_MATCHES_PATTERN);
     }
 
     public static boolean isMethodPost(HttpServletRequest req) {
