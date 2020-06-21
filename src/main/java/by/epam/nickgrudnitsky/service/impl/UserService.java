@@ -1,4 +1,4 @@
-package by.epam.nickgrudnitsky.service;
+package by.epam.nickgrudnitsky.service.impl;
 
 import by.epam.nickgrudnitsky.entity.User;
 import by.epam.nickgrudnitsky.exception.PostServiceException;

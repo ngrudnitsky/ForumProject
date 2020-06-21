@@ -1,4 +1,4 @@
-package by.epam.nickgrudnitsky.service;
+package by.epam.nickgrudnitsky.service.impl;
 
 import by.epam.nickgrudnitsky.entity.Post;
 import by.epam.nickgrudnitsky.exception.PostServiceException;
@@ -11,6 +11,8 @@ public interface PostService {
     Post updatePost(Post post) throws PostServiceException;
 
     List<Post> findAll() throws PostServiceException;
+
+    List<Post> findFromTo(Integer from, Integer to) throws PostServiceException;
 
     Post findById(Integer id) throws PostServiceException;
 

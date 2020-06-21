@@ -2,9 +2,7 @@ package by.epam.nickgrudnitsky.data.impl;
 
 import by.epam.nickgrudnitsky.entity.Post;
 import by.epam.nickgrudnitsky.entity.Status;
-import by.epam.nickgrudnitsky.entity.User;
 import by.epam.nickgrudnitsky.exception.PostRepositoryException;
-import by.epam.nickgrudnitsky.exception.UserRepositoryException;
 import by.epam.nickgrudnitsky.util.JdbcConnection;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -88,5 +86,11 @@ class PostRepositoryImplTest {
     @AfterAll
     static void resetDataBase() throws SQLException {
         JdbcConnection.reset();
+    }
+
+    @Test
+    void findFromTo() throws PostRepositoryException {
+        List<Post> posts = postRepository.findFromTo(1, 5);
+        assertEquals(4, posts.size());
     }
 }

@@ -107,11 +107,27 @@ public class PostRepositoryImpl implements PostRepository {
         }
     }
 
-    //todo findFromTo
     @Override
     public List<Post> findAll() throws PostRepositoryException {
         try {
             String findAllPostsQuery = "SELECT id FROM posts";
+            List<Post> posts = new ArrayList<>();
+            ResultSet resultSet = connection.createStatement().executeQuery(findAllPostsQuery);
+            while (resultSet.next()) {
+                posts.add(findById(resultSet.getInt(1)));
+            }
+            return posts;
+        } catch (SQLException e) {
+            String errorMessage = "IN PostRepositoryImpl.findAll failed to find all posts";
+            log.error(errorMessage);
+            throw new PostRepositoryException(errorMessage, e);
+        }
+    }
+
+    @Override
+    public List<Post> findFromTo(Integer from, Integer to) throws PostRepositoryException {
+        try {
+            String findAllPostsQuery = String.format("SELECT id FROM posts WHERE status = 'ACTIVE' LIMIT %s, %s", from, to-from);
             List<Post> posts = new ArrayList<>();
             ResultSet resultSet = connection.createStatement().executeQuery(findAllPostsQuery);
             while (resultSet.next()) {

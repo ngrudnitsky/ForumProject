@@ -40,8 +40,18 @@
 								</footer>
 							</article>
                         </c:forEach>
-                        	</div>
+                    </div>
 
+                    <c:choose>
+                       <c:when test="${previousFrom!=null && previousTo!=null && previousFrom != -5}">
+                    <ul class="actions">
+                        <li><a href="do?command=main page&from=${previousFrom}&to=${previousTo}" class="button large">Previous</a></li>
+                    </ul>
+                        </c:when>
+                    </c:choose>
+                    <ul class="actions">
+                        <li><a href="do?command=main page&from=${nextFrom}&to=${nextTo}" class="button large">Next</a></li>
+                    </ul>
 				<!-- Sidebar -->
 					<section id="sidebar">
 

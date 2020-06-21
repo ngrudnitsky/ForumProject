@@ -5,7 +5,6 @@ import by.epam.nickgrudnitsky.data.impl.PostRepositoryImpl;
 import by.epam.nickgrudnitsky.entity.Post;
 import by.epam.nickgrudnitsky.entity.Status;
 import by.epam.nickgrudnitsky.exception.*;
-import by.epam.nickgrudnitsky.service.PostService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,7 +48,6 @@ public class PostServiceImpl implements PostService {
         }
     }
 
-    //TODO findFromTo
     @Override
     public List<Post> findAll() throws PostServiceException {
         try {
@@ -58,6 +56,20 @@ public class PostServiceImpl implements PostService {
             return posts;
         } catch (PostRepositoryException e) {
             String errorMessage = "IN PostServiceImpl.findAll - failed to get all posts";
+            log.error(errorMessage);
+            throw new PostServiceException(errorMessage, e);
+        }
+    }
+
+    @Override
+    public List<Post> findFromTo(Integer from, Integer to) throws PostServiceException {
+        try {
+            List<Post> posts = postRepository.findFromTo(from, to);
+            log.info("IN PostServiceImpl.findFromTo - {} posts found", posts.size());
+            return posts;
+        } catch (PostRepositoryException e) {
+            String errorMessage = String.format(
+                    "IN PostServiceImpl.findFromTo - failed to get posts from %s to %s", from, to);
             log.error(errorMessage);
             throw new PostServiceException(errorMessage, e);
         }

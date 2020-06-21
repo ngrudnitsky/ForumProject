@@ -5,7 +5,7 @@ import by.epam.nickgrudnitsky.controller.command.Command;
 import by.epam.nickgrudnitsky.entity.User;
 import by.epam.nickgrudnitsky.exception.ParameterValidationException;
 import by.epam.nickgrudnitsky.exception.UserServiceException;
-import by.epam.nickgrudnitsky.service.UserService;
+import by.epam.nickgrudnitsky.service.impl.UserService;
 import by.epam.nickgrudnitsky.service.impl.UserServiceImpl;
 
 import javax.servlet.http.HttpServletRequest;

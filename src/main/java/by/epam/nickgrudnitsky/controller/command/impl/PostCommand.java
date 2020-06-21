@@ -6,8 +6,8 @@ import by.epam.nickgrudnitsky.controller.command.Command;
 import by.epam.nickgrudnitsky.entity.dto.PostDTO;
 import by.epam.nickgrudnitsky.exception.PostServiceException;
 import by.epam.nickgrudnitsky.exception.UserServiceException;
-import by.epam.nickgrudnitsky.service.PostService;
-import by.epam.nickgrudnitsky.service.UserService;
+import by.epam.nickgrudnitsky.service.impl.PostService;
+import by.epam.nickgrudnitsky.service.impl.UserService;
 import by.epam.nickgrudnitsky.service.impl.PostServiceImpl;
 import by.epam.nickgrudnitsky.service.impl.UserServiceImpl;
 

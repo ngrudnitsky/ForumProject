@@ -24,6 +24,15 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>feed</servlet-name>
+        <jsp-file>/index.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>feed</servlet-name>
+        <url-pattern>/feed</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>editPost</servlet-name>
         <jsp-file>/editPost.jsp</jsp-file>
     </servlet>
@@ -39,15 +48,6 @@
     <servlet-mapping>
         <servlet-name>writing</servlet-name>
         <url-pattern>/writing</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>feed</servlet-name>
-        <jsp-file>/index.jsp</jsp-file>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>feed</servlet-name>
-        <url-pattern>/feed</url-pattern>
     </servlet-mapping>
 
     <servlet>

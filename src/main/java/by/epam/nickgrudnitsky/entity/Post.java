@@ -9,7 +9,7 @@ public class Post extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Post " + title + "\n" + content;
+        return "Post " + id;
     }
 
     @Override

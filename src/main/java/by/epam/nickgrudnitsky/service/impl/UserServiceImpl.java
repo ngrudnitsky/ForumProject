@@ -7,7 +7,6 @@ import by.epam.nickgrudnitsky.data.impl.UserRepositoryImpl;
 import by.epam.nickgrudnitsky.entity.Status;
 import by.epam.nickgrudnitsky.entity.User;
 import by.epam.nickgrudnitsky.exception.*;
-import by.epam.nickgrudnitsky.service.UserService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

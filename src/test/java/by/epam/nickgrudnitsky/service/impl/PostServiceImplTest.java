@@ -105,4 +105,10 @@ class PostServiceImplTest {
     static void resetDataBase() throws SQLException {
         JdbcConnection.reset();
     }
+
+    @Test
+    void findFromTo() throws PostServiceException {
+        List<Post> posts = postService.findFromTo(1, 5);
+        assertEquals(4, posts.size());
+    }
 }

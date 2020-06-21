@@ -7,7 +7,7 @@ import by.epam.nickgrudnitsky.entity.Post;
 import by.epam.nickgrudnitsky.entity.User;
 import by.epam.nickgrudnitsky.exception.ParameterValidationException;
 import by.epam.nickgrudnitsky.exception.PostServiceException;
-import by.epam.nickgrudnitsky.service.PostService;
+import by.epam.nickgrudnitsky.service.impl.PostService;
 import by.epam.nickgrudnitsky.service.impl.PostServiceImpl;
 
 import javax.servlet.http.HttpServletRequest;
