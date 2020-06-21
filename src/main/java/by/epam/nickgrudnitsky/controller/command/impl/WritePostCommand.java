@@ -36,6 +36,7 @@ public class WritePostCommand implements Command {
         try {
             Post post = new Post();
             post.setTitle(getRequestParameter(req, "title"));
+            post.setPreview(getRequestParameter(req, "preview"));
             post.setContent(getRequestParameter(req, "content"));
             User user = (User) req.getSession().getAttribute("user");
             post.setUserId(user.getId());

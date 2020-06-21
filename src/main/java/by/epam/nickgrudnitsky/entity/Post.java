@@ -1,10 +1,9 @@
 package by.epam.nickgrudnitsky.entity;
 
-import java.util.Objects;
-
 public class Post extends BaseEntity {
     private Integer id;
     private String title;
+    private String preview;
     private String content;
     private Integer userId;
 
@@ -21,19 +20,21 @@ public class Post extends BaseEntity {
 
         Post post = (Post) o;
 
-        if (!Objects.equals(id, post.id)) return false;
-        if (!Objects.equals(title, post.title)) return false;
-        if (!Objects.equals(content, post.content)) return false;
-        return Objects.equals(userId, post.userId);
+        if (getId() != null ? !getId().equals(post.getId()) : post.getId() != null) return false;
+        if (getTitle() != null ? !getTitle().equals(post.getTitle()) : post.getTitle() != null) return false;
+        if (preview != null ? !preview.equals(post.preview) : post.preview != null) return false;
+        if (getContent() != null ? !getContent().equals(post.getContent()) : post.getContent() != null) return false;
+        return getUserId() != null ? getUserId().equals(post.getUserId()) : post.getUserId() == null;
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + (id != null ? id.hashCode() : 0);
-        result = 31 * result + (title != null ? title.hashCode() : 0);
-        result = 31 * result + (content != null ? content.hashCode() : 0);
-        result = 31 * result + (userId != null ? userId.hashCode() : 0);
+        result = 31 * result + (getId() != null ? getId().hashCode() : 0);
+        result = 31 * result + (getTitle() != null ? getTitle().hashCode() : 0);
+        result = 31 * result + (preview != null ? preview.hashCode() : 0);
+        result = 31 * result + (getContent() != null ? getContent().hashCode() : 0);
+        result = 31 * result + (getUserId() != null ? getUserId().hashCode() : 0);
         return result;
     }
 
@@ -67,5 +68,13 @@ public class Post extends BaseEntity {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public String getPreview() {
+        return preview;
+    }
+
+    public void setPreview(String preview) {
+        this.preview = preview;
     }
 }

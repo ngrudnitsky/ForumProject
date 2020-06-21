@@ -8,6 +8,7 @@ import java.sql.Date;
 public class PostDTO {
     private Integer id;
     private String title;
+    private String preview;
     private String content;
     private Integer userId;
     private String status;
@@ -18,6 +19,7 @@ public class PostDTO {
         PostDTO mainPagePostDTO = new PostDTO();
         mainPagePostDTO.setId(post.getId());
         mainPagePostDTO.setTitle(post.getTitle());
+        mainPagePostDTO.setPreview(post.getPreview());
         mainPagePostDTO.setContent(post.getContent());
         mainPagePostDTO.setUserId(post.getUserId());
         mainPagePostDTO.setStatus(post.getStatus().name());
@@ -79,5 +81,13 @@ public class PostDTO {
 
     public void setCreated(Date created) {
         this.created = created;
+    }
+
+    public String getPreview() {
+        return preview;
+    }
+
+    public void setPreview(String preview) {
+        this.preview = preview;
     }
 }

@@ -11,13 +11,21 @@
 
 <!-- Text input-->
 <div class="form-group">
-  <label class="col-md-4 control-label" for="username">Title</label>
+  <label class="col-md-4 control-label" for="title">Title</label>
   <div class="col-md-4">
   <input id="title" name="title" value="" type="text" placeholder="" class="form-control input-md" required="">
   </div>
 </div>
 
-<!-- Password input-->
+<!-- Text input-->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="preview">Preview</label>
+  <div class="col-md-4">
+  <input id="preview" name="preview" value="" type="text" placeholder="" class="form-control input-md" required="">
+  </div>
+</div>
+
+
 <div class="form-group">
   <label class="col-md-4 control-label" for="content">Content</label>
   <div class="col-md-4">

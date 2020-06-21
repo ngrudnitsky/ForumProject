@@ -26,6 +26,7 @@ class PostRepositoryImplTest {
         post = new Post();
         post.setId(-1);
         post.setTitle("test title");
+        post.setPreview("test preview");
         post.setContent("test content");
         post.setStatus(Status.ACTIVE);
         post.setCreated(new Date());

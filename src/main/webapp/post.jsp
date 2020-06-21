@@ -20,7 +20,7 @@
     								<header>
     									<div class="title">
     										<h2><a href="#">${post.title}</a></h2>
-    										<p></p>
+    										<p>${post.preview}</p>
     									</div>
     									<div class="meta">
     										<time class="published" datetime="${post.created}">${post.created}</time>

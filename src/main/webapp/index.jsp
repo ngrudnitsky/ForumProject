@@ -20,7 +20,7 @@
 									<div class="title">
 
 										<h2><a href="do?command=post&postId=${post.id}" method="POST">${post.title}</a></h2>
-
+                                           <p>${post.preview}</p>
 									</div>
 									<div class="meta">
 										<time class="published" datetime="${post.created}">${post.created}</time>
@@ -28,7 +28,7 @@
 									</div>
 								</header>
 								<a href="#" class="image featured"><img src="images/pic01.jpg" alt="" /></a>
-								<p>${post.content}</p>
+
 								<footer>
 									<ul class="actions">
                                     										<li><a href="do?command=post&postId=${post.id}" class="button large">Continue Reading</a></li>

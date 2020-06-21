@@ -24,6 +24,7 @@ class PostServiceImplTest {
         post = new Post();
         post.setId(1);
         post.setTitle("test title");
+        post.setPreview("test preview");
         post.setContent("test content");
         post.setUserId(1);
         post.setStatus(Status.ACTIVE);

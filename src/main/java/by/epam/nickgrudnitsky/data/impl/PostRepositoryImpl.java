@@ -27,6 +27,7 @@ public class PostRepositoryImpl implements PostRepository {
             if (resultSet.next()) {
                 post.setId(id);
                 post.setTitle(resultSet.getString("title"));
+                post.setPreview(resultSet.getString("preview"));
                 post.setContent(resultSet.getString("content"));
                 post.setCreated(resultSet.getDate("createdAt"));
                 post.setUpdated(resultSet.getDate("updatedAt"));
@@ -45,14 +46,15 @@ public class PostRepositoryImpl implements PostRepository {
     @Override
     public Post update(Post post) throws PostRepositoryException {
         try {
-            String updatePostQuery = "UPDATE posts SET title = ?, content = ?, status = ?, " +
+            String updatePostQuery = "UPDATE posts SET title = ?, preview = ?, content = ?, status = ?, " +
                     "updatedAt= ? WHERE id = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(updatePostQuery);
             preparedStatement.setString(1, post.getTitle());
-            preparedStatement.setString(2, post.getContent());
-            preparedStatement.setString(3, post.getStatus().name());
-            preparedStatement.setDate(4, new Date(post.getUpdated().getTime()));
-            preparedStatement.setInt(5, post.getId());
+            preparedStatement.setString(2, post.getPreview());
+            preparedStatement.setString(3, post.getContent());
+            preparedStatement.setString(4, post.getStatus().name());
+            preparedStatement.setDate(5, new Date(post.getUpdated().getTime()));
+            preparedStatement.setInt(6, post.getId());
             preparedStatement.executeUpdate();
             return post;
         } catch (SQLException e) {
@@ -84,15 +86,16 @@ public class PostRepositoryImpl implements PostRepository {
     @Override
     public Post create(Post post) throws PostRepositoryException {
         try {
-            String createPostQuery = "INSERT INTO posts(title, content, status," +
-                    "createdAt, updatedAt, users_id)VALUES(?,?,?,?,?,?)";
+            String createPostQuery = "INSERT INTO posts(title, preview, content, status," +
+                    "createdAt, updatedAt, users_id)VALUES(?,?,?,?,?,?,?)";
             PreparedStatement preparedStatement = connection.prepareStatement(createPostQuery);
             preparedStatement.setString(1, post.getTitle());
-            preparedStatement.setString(2, post.getContent());
-            preparedStatement.setString(3, post.getStatus().name());
-            preparedStatement.setDate(4, new Date(post.getCreated().getTime()));
+            preparedStatement.setString(2, post.getPreview());
+            preparedStatement.setString(3, post.getContent());
+            preparedStatement.setString(4, post.getStatus().name());
             preparedStatement.setDate(5, new Date(post.getCreated().getTime()));
-            preparedStatement.setInt(6, post.getUserId());
+            preparedStatement.setDate(6, new Date(post.getCreated().getTime()));
+            preparedStatement.setInt(7, post.getUserId());
             preparedStatement.executeUpdate();
             post.setId(getLastId());
             return post;

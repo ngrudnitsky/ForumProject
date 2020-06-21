@@ -124,4 +124,17 @@
         <filter-name>JspFilter</filter-name>
         <url-pattern>*.jsp</url-pattern>
     </filter-mapping>
+
+    <filter>
+        <filter-name>EncodingFilter</filter-name>
+        <filter-class>by.epam.nickgrudnitsky.filter.EncodingFilter</filter-class>
+        <init-param>
+            <param-name>encode</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>EncodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
 </web-app>
