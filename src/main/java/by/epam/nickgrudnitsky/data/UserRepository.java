@@ -17,4 +17,6 @@ public interface UserRepository {
     List<User> findAll() throws UserRepositoryException;
 
     User findById(Integer id) throws UserRepositoryException;
+
+    Integer getLastId() throws UserRepositoryException;
 }

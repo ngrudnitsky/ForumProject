@@ -95,12 +95,15 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Integer getLastId() throws PostServiceException {
+        String errorMessage = "IN PostServiceImpl.getLastId - Failed to get last id";
         try {
             Integer id = postRepository.getLastId();
+            if (id == -1) {
+                throw new PostServiceException(errorMessage);
+            }
             log.info("IN PostServiceImpl.getLastId - id: {} was successfully got", id);
             return id;
         } catch (PostRepositoryException e) {
-            String errorMessage = "IN PostServiceImpl.getLastId - Failed to get last id";
             log.error(errorMessage);
             throw new PostServiceException(errorMessage, e);
         }

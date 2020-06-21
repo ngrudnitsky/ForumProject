@@ -62,8 +62,7 @@ public class UserRepositoryImpl implements UserRepository {
             preparedStatement.setDate(7, new Date(user.getCreated().getTime()));
             preparedStatement.setDate(8, new Date(user.getCreated().getTime()));
             preparedStatement.executeUpdate();
-            //todo findUsersId
-            user = findByUsername(user.getUserName());
+            user.setId(getLastId());
             return user;
         } catch (SQLException e) {
             String errorMessage = String.format(
@@ -158,5 +157,21 @@ public class UserRepositoryImpl implements UserRepository {
         }
         log.error(errorMessage);
         throw new UserRepositoryException(errorMessage);
+    }
+
+    @Override
+    public Integer getLastId() throws UserRepositoryException {
+        try {
+            String getLastId = "SELECT LAST_INSERT_ID()";
+            ResultSet resultSet = connection.createStatement().executeQuery(getLastId);
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            }
+        } catch (SQLException e) {
+            String errorMessage = "IN UserRepositoryImpl.getLastId failed to get last id";
+            log.error(errorMessage);
+            throw new UserRepositoryException(errorMessage, e);
+        }
+        return -1;
     }
 }

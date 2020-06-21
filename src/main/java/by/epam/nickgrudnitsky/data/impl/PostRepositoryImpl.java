@@ -94,6 +94,7 @@ public class PostRepositoryImpl implements PostRepository {
             preparedStatement.setDate(5, new Date(post.getCreated().getTime()));
             preparedStatement.setInt(6, post.getUserId());
             preparedStatement.executeUpdate();
+            post.setId(getLastId());
             return post;
         } catch (SQLException e) {
             String errorMessage = String.format(

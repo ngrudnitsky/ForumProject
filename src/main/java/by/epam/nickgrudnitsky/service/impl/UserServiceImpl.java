@@ -6,9 +6,7 @@ import by.epam.nickgrudnitsky.data.impl.RoleRepositoryImpl;
 import by.epam.nickgrudnitsky.data.impl.UserRepositoryImpl;
 import by.epam.nickgrudnitsky.entity.Status;
 import by.epam.nickgrudnitsky.entity.User;
-import by.epam.nickgrudnitsky.exception.RoleRepositoryException;
-import by.epam.nickgrudnitsky.exception.UserRepositoryException;
-import by.epam.nickgrudnitsky.exception.UserServiceException;
+import by.epam.nickgrudnitsky.exception.*;
 import by.epam.nickgrudnitsky.service.UserService;
 
 import org.slf4j.Logger;
@@ -113,6 +111,22 @@ public class UserServiceImpl implements UserService {
                             "IN UserServiceImpl.checkIfAdmin - Failed to check if user %S is admin.", id);
             log.error(errorMessage);
             throw new UserServiceException(errorMessage, e);
+        }
+    }
+
+    @Override
+    public Integer getLastId() throws PostServiceException {
+        String errorMessage = "IN UserServiceImpl.getLastId - Failed to get last id";
+        try {
+            Integer id = userRepository.getLastId();
+            if (id == -1) {
+                throw new PostServiceException(errorMessage);
+            }
+            log.info("IN UserServiceImpl.getLastId - id: {} was successfully got", id);
+            return id;
+        } catch (UserRepositoryException e) {
+            log.error(errorMessage);
+            throw new PostServiceException(errorMessage, e);
         }
     }
 

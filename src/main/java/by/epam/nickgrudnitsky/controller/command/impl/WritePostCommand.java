@@ -40,8 +40,6 @@ public class WritePostCommand implements Command {
             User user = (User) req.getSession().getAttribute("user");
             post.setUserId(user.getId());
             postService.create(post);
-            Integer id = postService.getLastId();
-            post.setId(id);
             PostDTO postDto = PostDTO.convertToPostDTO(post);
             postDto.setUser(user);
             return postDto;
