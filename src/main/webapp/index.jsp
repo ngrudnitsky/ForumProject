@@ -24,7 +24,7 @@
 									</div>
 									<div class="meta">
 										<time class="published" datetime="${post.created}">${post.created}</time>
-										<a href="#" class="author"><span class="name">${post.user.userName}</span><img src="images/avatar.jpg" alt="" /></a>
+										<a href="" class="author"><span class="name">${post.user.userName}</span><img src="images/avatar.png" alt="" /></a>
 									</div>
 								</header>
 								<a href="#" class="image featured"><img src="images/pic01.jpg" alt="" /></a>
@@ -34,8 +34,8 @@
                                     										<li><a href="do?command=post&postId=${post.id}" class="button large">Continue Reading</a></li>
                                     									</ul>
 									<ul class="stats">
-										<li><a href="#" class="icon solid fa-heart">(todo)28</a></li>
-										<li><a href="#" class="icon solid fa-comment">(todo)128</a></li>
+										<li><a href="" class="icon solid fa-heart">(todo)28</a></li>
+										<li><a href="" class="icon solid fa-comment">(todo)128</a></li>
 									</ul>
 								</footer>
 							</article>
@@ -57,7 +57,7 @@
 
 						<!-- Intro -->
 							<section id="intro">
-								<a href="#" class="logo"><img src="images/logo.jpg" alt="" /></a>
+								<a href="#" class="logo"><img src="images/logo.png" alt="" /></a>
 								<header>
 									<h2>Forum Project</h2>
 									<p></p>
