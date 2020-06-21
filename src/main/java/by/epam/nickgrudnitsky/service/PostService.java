@@ -15,4 +15,6 @@ public interface PostService {
     Post findById(Integer id) throws PostServiceException;
 
     Post deleteById(Integer id) throws PostServiceException;
+
+    Integer getLastId() throws PostServiceException;
 }

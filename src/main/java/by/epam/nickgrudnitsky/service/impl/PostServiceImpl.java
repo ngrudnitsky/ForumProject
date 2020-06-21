@@ -93,6 +93,19 @@ public class PostServiceImpl implements PostService {
         }
     }
 
+    @Override
+    public Integer getLastId() throws PostServiceException {
+        try {
+            Integer id = postRepository.getLastId();
+            log.info("IN PostServiceImpl.getLastId - id: {} was successfully got", id);
+            return id;
+        } catch (PostRepositoryException e) {
+            String errorMessage = "IN PostServiceImpl.getLastId - Failed to get last id";
+            log.error(errorMessage);
+            throw new PostServiceException(errorMessage, e);
+        }
+    }
+
     private void checkIfValueIsNull(Object value, String errorMessage) throws PostServiceException {
         if (value == null) {
             log.error(errorMessage);

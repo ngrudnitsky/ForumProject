@@ -16,4 +16,5 @@ public interface PostRepository {
 
     List<Post> findAll() throws PostRepositoryException;
 
+    Integer getLastId() throws PostRepositoryException;
 }

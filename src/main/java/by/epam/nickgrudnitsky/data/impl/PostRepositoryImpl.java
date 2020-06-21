@@ -120,4 +120,20 @@ public class PostRepositoryImpl implements PostRepository {
             throw new PostRepositoryException(errorMessage, e);
         }
     }
+
+    @Override
+    public Integer getLastId() throws PostRepositoryException {
+        try {
+            String getLastId = "SELECT LAST_INSERT_ID()";
+            ResultSet resultSet = connection.createStatement().executeQuery(getLastId);
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            }
+        } catch (SQLException e) {
+            String errorMessage = "IN PostRepositoryImpl.getLastId failed to get last id";
+            log.error(errorMessage);
+            throw new PostRepositoryException(errorMessage, e);
+        }
+        return -1;
+    }
 }

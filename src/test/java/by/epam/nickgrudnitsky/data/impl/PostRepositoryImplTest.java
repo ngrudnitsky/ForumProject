@@ -77,6 +77,13 @@ class PostRepositoryImplTest {
                 postRepository.deleteById(Integer.MAX_VALUE));
     }
 
+    @Test
+    void getLastId() throws PostRepositoryException {
+        post = postRepository.create(post);
+        Integer lastId = postRepository.getLastId();
+        assertNotNull(lastId);
+    }
+
     @AfterAll
     static void resetDataBase() throws SQLException {
         JdbcConnection.reset();
