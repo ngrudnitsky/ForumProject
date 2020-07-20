@@ -1,6 +1,7 @@
 package by.epam.nickgrudnitsky.data.impl;
 
-import by.epam.nickgrudnitsky.util.JdbcConnection;
+import by.epam.nickgrudnitsky.util.ConnectionPool;
+import by.epam.nickgrudnitsky.util.CustomConnectionPool;
 import by.epam.nickgrudnitsky.data.UserRepository;
 import by.epam.nickgrudnitsky.entity.Status;
 import by.epam.nickgrudnitsky.entity.User;
@@ -15,17 +16,20 @@ import java.util.List;
 
 public class UserRepositoryImpl implements UserRepository {
     private final Logger log = LoggerFactory.getLogger(UserRepositoryImpl.class);
-    private final Connection connection = JdbcConnection.getConnection();
+    private final ConnectionPool connectionPool = CustomConnectionPool
+            .getConnectionPool("jdbc:mysql://localhost:3306/mydb?serverTimezone=UTC", "root", "root");
 
     @Override
     public User findByUsername(String userName) throws UserRepositoryException {
+        Connection connection = connectionPool.getConnection();
         String errorMessage = String.format(
                 "IN UserRepositoryImpl.findByUsername failed to find user by userName %s", userName);
         try {
-            String findByNameQuery = String.format(
-                    "SELECT * FROM users WHERE userName = '%s'", userName);
+            String findByNameQuery = "SELECT * FROM users WHERE userName = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(findByNameQuery);
+            preparedStatement.setString(1, userName);
             User user = new User();
-            ResultSet resultSet = connection.createStatement().executeQuery(findByNameQuery);
+            ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 user.setId(resultSet.getInt("id"));
                 user.setFirstName(resultSet.getString("firstName"));
@@ -42,6 +46,8 @@ public class UserRepositoryImpl implements UserRepository {
         } catch (SQLException e) {
             log.error(errorMessage);
             throw new UserRepositoryException(errorMessage, e);
+        } finally {
+            connectionPool.releaseConnection(connection);
         }
         log.error(errorMessage);
         throw new UserRepositoryException(errorMessage);
@@ -49,6 +55,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User create(User user) throws UserRepositoryException {
+        Connection connection = connectionPool.getConnection();
         try {
             String saveUserQuery = "INSERT INTO users(firstName, LastName, userName," +
                     "email, password, status, createdAt, updatedAt)VALUES(?,?,?,?,?,?,?,?)";
@@ -69,12 +76,15 @@ public class UserRepositoryImpl implements UserRepository {
                     "IN UserRepositoryImpl.create failed to create new user %s", user.getUserName());
             log.error(errorMessage);
             throw new UserRepositoryException(errorMessage, e);
+        } finally {
+            connectionPool.releaseConnection(connection);
         }
     }
 
     //todo findFromTo
     @Override
     public List<User> findAll() throws UserRepositoryException {
+        Connection connection = connectionPool.getConnection();
         try {
             String findAllUsersQuery = "SELECT userName FROM users";
             List<User> users = new ArrayList<>();
@@ -87,11 +97,14 @@ public class UserRepositoryImpl implements UserRepository {
             String errorMessage = "IN UserRepositoryImpl.findAll failed to find all users.";
             log.error(errorMessage);
             throw new UserRepositoryException(errorMessage, e);
+        } finally {
+            connectionPool.releaseConnection(connection);
         }
     }
 
     @Override
     public User update(User user) throws UserRepositoryException {
+        Connection connection = connectionPool.getConnection();
         try {
             String updateUserQuery = "UPDATE users SET firstName = ?, LastName = ?, userName = ?," +
                     "email = ?, password = ?, status = ?, updatedAt = ? WHERE id = ?";
@@ -111,11 +124,14 @@ public class UserRepositoryImpl implements UserRepository {
                     "IN UserRepositoryImpl.update failed to update user %s", user.getUserName());
             log.error(errorMessage);
             throw new UserRepositoryException(errorMessage, e);
+        } finally {
+            connectionPool.releaseConnection(connection);
         }
     }
 
     @Override
     public User deleteById(Integer id) throws UserRepositoryException {
+        Connection connection = connectionPool.getConnection();
         try {
             String updateUserQuery = "UPDATE users SET status = ?, updatedAt = ? WHERE id = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(updateUserQuery);
@@ -129,15 +145,20 @@ public class UserRepositoryImpl implements UserRepository {
                     "IN UserRepositoryImpl.deleteById failed to delete user with id %s", id);
             log.error(errorMessage);
             throw new UserRepositoryException(errorMessage, e);
+        } finally {
+            connectionPool.releaseConnection(connection);
         }
     }
 
     @Override
     public User findById(Integer id) throws UserRepositoryException {
+        Connection connection = connectionPool.getConnection();
         String errorMessage = String.format("IN UserRepositoryImpl.findById failed to find user by id %s", id);
         try {
-            String findByIdQuery = String.format("SELECT * FROM users WHERE id = '%s'", id);
-            ResultSet resultSet = connection.createStatement().executeQuery(findByIdQuery);
+            String findByIdQuery = "SELECT * FROM users WHERE id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(findByIdQuery);
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 User user = new User();
                 user.setId(id);
@@ -154,6 +175,8 @@ public class UserRepositoryImpl implements UserRepository {
         } catch (SQLException e) {
             log.error(errorMessage);
             throw new UserRepositoryException(errorMessage, e);
+        } finally {
+            connectionPool.releaseConnection(connection);
         }
         log.error(errorMessage);
         throw new UserRepositoryException(errorMessage);
@@ -161,6 +184,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Integer getLastId() throws UserRepositoryException {
+        Connection connection = connectionPool.getConnection();
         try {
             String getLastId = "SELECT LAST_INSERT_ID()";
             ResultSet resultSet = connection.createStatement().executeQuery(getLastId);
@@ -171,6 +195,8 @@ public class UserRepositoryImpl implements UserRepository {
             String errorMessage = "IN UserRepositoryImpl.getLastId failed to get last id";
             log.error(errorMessage);
             throw new UserRepositoryException(errorMessage, e);
+        } finally {
+            connectionPool.releaseConnection(connection);
         }
         return -1;
     }
